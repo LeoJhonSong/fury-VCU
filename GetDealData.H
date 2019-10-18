@@ -4,17 +4,17 @@
 #include  "ADC1.H"
 
 #define  ROUND(n)	((int)(n+0.5))
-/*************************************Íâ²¿ÒıÓÃ±äÁ¿ÉùÃ÷************************************/
+/*************************************å¤–éƒ¨å¼•ç”¨å˜é‡å£°æ˜************************************/
 extern int ac_final,brAdFinal;
-extern int ac_ad[2],br_ad,br_ad1;//Á½Â·ÓÍÃÅµÄADÖµ
+extern int ac_ad[2],br_ad,br_ad1;//ä¸¤è·¯æ²¹é—¨çš„ADå€¼
 extern unsigned int ac_data;
 extern ubyte acRealiableFlag;
-/*************************************º¯ÊıÉùÃ÷************************************/
-void acDeal();//ÓÍÃÅ²¿·Ö×Üº¯Êı
-void get_ac_AD();//»ñÈ¡Á½Â·ÓÍÃÅµÄADÖµ
-void DataDeal(int acData);//ÓÍÃÅÇúÏßµ÷Õû
+/*************************************å‡½æ•°å£°æ˜************************************/
+void acDeal();//æ²¹é—¨éƒ¨åˆ†æ€»å‡½æ•°
+void get_ac_AD();//è·å–ä¸¤è·¯æ²¹é—¨çš„ADå€¼
+void DataDeal(int acData);//æ²¹é—¨æ›²çº¿è°ƒæ•´
 void delay(int ms);
-void brDeal();//É²³µ²¿·Ö×Üº¯Êı
-int acChangeLimit(int ac); //ÓÍÃÅ±ä»¯ÂÊÏŞÖÆ
+void brDeal();//åˆ¹è½¦éƒ¨åˆ†æ€»å‡½æ•°
+int acChangeLimit(int ac); //æ²¹é—¨å˜åŒ–ç‡é™åˆ¶
 
 #endif 

@@ -31,7 +31,7 @@
 //****************************************************************************
 
 // USER CODE BEGIN (CAN_Header,2)
-//    ¶¯Á¦µç³Ø ×ÜµçÑ¹      ×ÜµçÁ÷       SOC     ×î¸ßÎÂ¶È  ×îµÍÎÂ¶È
+//    åŠ¨åŠ›ç”µæ±  æ€»ç”µå‹      æ€»ç”µæµ       SOC     æœ€é«˜æ¸©åº¦  æœ€ä½æ¸©åº¦
 extern unsigned int BatVoltage,BatCurrent,BatSoc,MaxTemp,MinTemp;
 extern unsigned int	RotateSpeed,mcFlag,motorTemp, mcuTemp;
 

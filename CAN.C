@@ -1871,14 +1871,14 @@ void CAN_vLoadData(ubyte ubObjNr, ubyte *ubpubData)
 //****************************************************************************
 
 // USER CODE BEGIN (SRN0,1)
-//    ¶¯Á¦µç³Ø ×ÜµçÑ¹      ×ÜµçÁ÷       SOC     ×î¸ßÎÂ¶È  ×îµÍÎÂ¶È
+//    åŠ¨åŠ›ç”µæ±  æ€»ç”µå‹      æ€»ç”µæµ       SOC     æœ€é«˜æ¸©åº¦  æœ€ä½æ¸©åº¦
 unsigned int BatVoltage=0,BatCurrent=0,BatSoc=0,MaxTemp=0,MinTemp=0;
 unsigned int RotateSpeed=0,mcFlag=0,motorTemp=0,mcuTemp=0;
 
-ubyte can2_recieve[8]={0}; //VCU½ÓÊÕµç»ú¿ØÖÆÆ÷·¢ËÍµ±Ç°×ªËÙ,µç¿Ø×´Ì¬±êÖ¾
-ubyte can3_recieve[8]={0}; //VCU½ÓÊÕBMS·¢ËÍµÄµçÑ¹¡¢µçÁ÷¡¢SOC
-ubyte can4_recieve[8]={0}; //VCU½ÓÊÕBMS·¢ËÍµÄ×î¸ßÎÂ¶È
-ubyte can5_recieve[8]={0}; //VCU½ÓÊÕµç»ú¿ØÖÆÆ÷·¢ËÍµç¿ØÎÂ¶È¼°µç»úÎÂ¶È
+ubyte can2_recieve[8]={0}; //VCUæ¥æ”¶ç”µæœºæ§åˆ¶å™¨å‘é€å½“å‰è½¬é€Ÿ,ç”µæ§çŠ¶æ€æ ‡å¿—
+ubyte can3_recieve[8]={0}; //VCUæ¥æ”¶BMSå‘é€çš„ç”µå‹ã€ç”µæµã€SOC
+ubyte can4_recieve[8]={0}; //VCUæ¥æ”¶BMSå‘é€çš„æœ€é«˜æ¸©åº¦
+ubyte can5_recieve[8]={0}; //VCUæ¥æ”¶ç”µæœºæ§åˆ¶å™¨å‘é€ç”µæ§æ¸©åº¦åŠç”µæœºæ¸©åº¦
 // USER CODE END
 
 void CAN_viSRN0(void) interrupt CAN_SRN0INT
@@ -1911,7 +1911,7 @@ void CAN_viSRN0(void) interrupt CAN_SRN0INT
         {
             // USER CODE BEGIN (SRN0_OBJ2,2)
 			 for(i = 0; i < 8; i++)
-					can2_recieve[i] = CAN_HWOBJ[2].ubData[i];	   //can2_recieve[8]; //VCU½ÓÊÕµç»ú¿ØÖÆÆ÷·¢ËÍµ±Ç°×ªËÙ
+					can2_recieve[i] = CAN_HWOBJ[2].ubData[i];	   //can2_recieve[8]; //VCUæ¥æ”¶ç”µæœºæ§åˆ¶å™¨å‘é€å½“å‰è½¬é€Ÿ
 			 RotateSpeed =((can2_recieve[1]*256+can2_recieve[0])/2)-10000;
 			 mcFlag=can2_recieve[5];
 			 can2WatchDog=0;
@@ -1968,7 +1968,7 @@ void CAN_viSRN0(void) interrupt CAN_SRN0INT
         {
             // USER CODE BEGIN (SRN0_OBJ3,2)
 			 for(i = 0; i < 8; i++)
-			can3_recieve[i] = CAN_HWOBJ[3].ubData[i];	//can3_recieve[8]; //VCU½ÓÊÕBMS·¢ËÍµÄµçÑ¹¡¢µçÁ÷¡¢SOC
+			can3_recieve[i] = CAN_HWOBJ[3].ubData[i];	//can3_recieve[8]; //VCUæ¥æ”¶BMSå‘é€çš„ç”µå‹ã€ç”µæµã€SOC
 			BatVoltage =can3_recieve[0]*256+can3_recieve[1];
 			BatCurrent =can3_recieve[2]*256+can3_recieve[3];
 			BatSoc=	can3_recieve[4];
@@ -2026,7 +2026,7 @@ void CAN_viSRN0(void) interrupt CAN_SRN0INT
         {
             // USER CODE BEGIN (SRN0_OBJ4,2)
 			for(i = 0; i < 8; i++)
-			can4_recieve[i] = CAN_HWOBJ[4].ubData[i];	//can4_recieve		// can4_recieve[8]; //VCU½ÓÊÕBMS·¢ËÍµÄ×î¸ßÎÂ¶È
+			can4_recieve[i] = CAN_HWOBJ[4].ubData[i];	//can4_recieve		// can4_recieve[8]; //VCUæ¥æ”¶BMSå‘é€çš„æœ€é«˜æ¸©åº¦
 			MaxTemp= can4_recieve[0];
 			MinTemp= can4_recieve[1];
 			can1WatchDog=0;
@@ -2079,7 +2079,7 @@ void CAN_viSRN0(void) interrupt CAN_SRN0INT
 
             // USER CODE END
 
-        if(uwSRN0ObjHandler & MOSTAT_NEWDAT)       // if NEWDAT is set		  //VCU½ÓÊÕµç»ú¼°µç¿ØÎÂ¶È
+        if(uwSRN0ObjHandler & MOSTAT_NEWDAT)       // if NEWDAT is set		  //VCUæ¥æ”¶ç”µæœºåŠç”µæ§æ¸©åº¦
         {
             // USER CODE BEGIN (SRN0_OBJ5,2)
 			  for(i = 0; i < 8; i++)
