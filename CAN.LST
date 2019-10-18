@@ -1,0 +1,2259 @@
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 1   
+
+
+C166 COMPILER V7.00, COMPILATION OF MODULE CAN
+OBJECT MODULE PLACED IN CAN.OBJ
+COMPILER INVOKED BY: F:\Softeware\Fury\Keil\C166\BIN\C166.EXE CAN.C MODV2 BROWSE MODV2 DEBUG
+
+ stmt lvl     source
+
+    1         //****************************************************************************
+    2         // @Module        MultiCAN Module (CAN)
+    3         // @Filename      CAN.C
+    4         // @Project       test3.dav
+    5         //----------------------------------------------------------------------------
+    6         // @Controller    Infineon XC2267M-104F80
+    7         //
+    8         // @Compiler      Keil
+    9         //
+   10         // @Codegenerator 2.0
+   11         //
+   12         // @Description   This file contains functions that use the CAN module.
+   13         //
+   14         //----------------------------------------------------------------------------
+   15         // @Date          2018/11/1 16:59:46
+   16         //
+   17         //****************************************************************************
+   18         
+   19         
+   20         
+   21         // USER CODE BEGIN (CAN_General,1)
+   22         
+   23         // USER CODE END
+   24         
+   25         
+   26         
+   27         //****************************************************************************
+   28         // @Project Includes
+   29         //****************************************************************************
+   30         
+   31         #include "MAIN.H"
+   32         
+   33         // USER CODE BEGIN (CAN_General,2)
+   34         
+   35         // USER CODE END
+   36         
+   37         
+   38         //****************************************************************************
+   39         // @Macros
+   40         //****************************************************************************
+   41         
+   42         // USER CODE BEGIN (CAN_General,3)
+   43         
+   44         // USER CODE END
+   45         
+   46         
+   47         //****************************************************************************
+   48         // @Defines
+   49         //****************************************************************************
+   50         
+   51         // USER CODE BEGIN (CAN_General,4)
+   52         
+   53         // USER CODE END
+   54         
+   55         
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 2   
+
+   56         //****************************************************************************
+   57         // @Typedefs
+   58         //****************************************************************************
+   59         
+   60         // USER CODE BEGIN (CAN_General,5)
+   61         
+   62         // USER CODE END
+   63         
+   64         
+   65         //****************************************************************************
+   66         // @Imported Global Variables
+   67         //****************************************************************************
+   68         
+   69         // USER CODE BEGIN (CAN_General,6)
+   70         
+   71         // USER CODE END
+   72         
+   73         
+   74         //****************************************************************************
+   75         // @Global Variables
+   76         //****************************************************************************
+   77         
+   78         
+   79         // USER CODE BEGIN (CAN_General,7)
+   80         
+   81         // USER CODE END
+   82         
+   83         
+   84         //****************************************************************************
+   85         // @External Prototypes
+   86         //****************************************************************************
+   87         
+   88         // USER CODE BEGIN (CAN_General,8)
+   89         
+   90         // USER CODE END
+   91         
+   92         
+   93         //****************************************************************************
+   94         // @Prototypes Of Local Functions
+   95         //****************************************************************************
+   96         
+   97         // USER CODE BEGIN (CAN_General,9)
+   98         
+   99         // USER CODE END
+  100         
+  101         
+  102         //****************************************************************************
+  103         // @Function      void CAN_vInit(void) 
+  104         //
+  105         //----------------------------------------------------------------------------
+  106         // @Description   This is the initialization function of the CAN function 
+  107         //                library. It is assumed that the SFRs used by this library 
+  108         //                are in reset state. 
+  109         //
+  110         //----------------------------------------------------------------------------
+  111         // @Returnvalue   None
+  112         //
+  113         //----------------------------------------------------------------------------
+  114         // @Parameters    None
+  115         //
+  116         //----------------------------------------------------------------------------
+  117         // @Date          2018/11/1
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 3   
+
+  118         //
+  119         //****************************************************************************
+  120         
+  121         // USER CODE BEGIN (Init,1)
+  122         
+  123         // USER CODE END
+  124         
+  125         void CAN_vInit(void)
+  126         {
+  127  1      
+  128  1        // USER CODE BEGIN (Init,2)
+  129  1      
+  130  1        // USER CODE END
+  131  1      
+  132  1        ///  -----------------------------------------------------------------------
+  133  1        ///  Configuration of Kernel State Configuration Register:
+  134  1        ///  -----------------------------------------------------------------------
+  135  1        ///  - Enable the CAN module(MODEN)
+  136  1        ///  - Enable Bit Protection for MODEN
+  137  1      
+  138  1          MCAN_KSCCFG  =  0x0003;      // load Kernel State Configuration Register
+  139  1      
+  140  1          _nop_();  // one cycle delay 
+  141  1      
+  142  1          _nop_();  // one cycle delay 
+  143  1      
+  144  1      
+  145  1        ///  -----------------------------------------------------------------------
+  146  1        ///  Configuration of the Module Clock:
+  147  1        ///  -----------------------------------------------------------------------
+  148  1        ///  - the CAN module clock = 40.00 MHz
+  149  1        ///  - Normal divider mode selected
+  150  1      
+  151  1          CAN_FDRL     =  0x43FE;      // load Fractional Divider Register
+  152  1      
+  153  1        ///  -----------------------------------------------------------------------
+  154  1        ///  Panel Control
+  155  1        ///  -----------------------------------------------------------------------
+  156  1        ///  - wait until Panel has finished the initialisation
+  157  1      
+  158  1          while(CAN_PANCTRL & CAN_PANCTR_BUSY){ // wait until Panel has finished 
+  159  2                                                // the initialisation
+  160  2            }                         
+  161  1      
+  162  1        ///  -----------------------------------------------------------------------
+  163  1        ///  Configuration of CAN Node 0:
+  164  1        ///  -----------------------------------------------------------------------
+  165  1      
+  166  1        ///  General Configuration of the Node 0:
+  167  1        ///  - set INIT and CCE
+  168  1      
+  169  1          CAN_NCR0     =  0x0041;      // load NODE 0 control register[15-0]
+  170  1      
+  171  1        ///  - load NODE 0 interrupt pointer register
+  172  1      
+  173  1          CAN_NIPR0    =  0x0000;      // load NIPR0_LECINP, ALINP, CFCINP and TRINP
+  174  1      
+  175  1        ///  Configuration of the used CAN Port Pins:
+  176  1        ///  - Loop-back mode is disabled
+  177  1        ///  - P2.0 is used for CAN0 Receive input(RXDC0C)
+  178  1        ///  - P2.1 is used for CAN0 Transmit output(TXDC0C)
+  179  1      
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 4   
+
+  180  1        P2_IOCR01 = 0x0090;    //set direction register
+  181  1          CAN_NPCR0    =  0x0002;      // load node0 port control register
+  182  1      
+  183  1      
+  184  1        ///  Configuration of the Node 0 Baud Rate:
+  185  1        ///  - required baud rate = 250.000 kbaud
+  186  1        ///  - real baud rate     = 250.000 kbaud
+  187  1        ///  - sample point       = 60.00 %
+  188  1        ///  - there are 5 time quanta before sample point
+  189  1        ///  - there are 4 time quanta after sample point
+  190  1        ///  - the (re)synchronization jump width is 2 time quanta
+  191  1      
+  192  1          CAN_NBTR0L   =  0x344F;      // load NBTR0_DIV8, TSEG2, TSEG1, SJW and BRP
+  193  1      
+  194  1        ///  Configuration of the Node 0 Error Counter:
+  195  1        ///  - the error warning threshold value (warning level) is 96
+  196  1      
+  197  1          CAN_NECNT0H = 0x0060;        // load NECNT0_EWRNLVL register
+  198  1          CAN_NECNT0L = 0x0000;       
+  199  1      
+  200  1        ///  Configuration of the Frame Counter:
+  201  1        ///  - Frame Counter Mode: the counter is incremented upon the reception 
+  202  1        ///    and transmission of frames
+  203  1        ///  - frame counter: 0x0000
+  204  1      
+  205  1          CAN_NFCR0H = 0x0000;         // load NFCR0_CFCOV, CFCIE, CFMOD, CFSEL
+  206  1          CAN_NFCR0L = 0x0000;         // load NFCR0_CFC
+  207  1      
+  208  1        ///  -----------------------------------------------------------------------
+  209  1        ///  Configuration of CAN Node 1:
+  210  1        ///  -----------------------------------------------------------------------
+  211  1      
+  212  1        ///  General Configuration of the Node 1:
+  213  1        ///  - set INIT and CCE
+  214  1      
+  215  1          CAN_NCR1     =  0x0041;      // load NODE 1 control register[15-0]
+  216  1      
+  217  1        ///  - load NODE 1 interrupt pointer register
+  218  1      
+  219  1          CAN_NIPR1    =  0x0000;      // load NIPR1_LECINP, ALINP, CFCINP and TRINP
+  220  1      
+  221  1        ///  Configuration of the used CAN Port Pins:
+  222  1        ///  - Loop-back mode is disabled
+  223  1        ///  - P0.4 is used for CAN1 Receive input(RXDC1B)
+  224  1        ///  - P0.6 is used for CAN1 Transmit Output(TXDC1A)
+  225  1      
+  226  1        P0_IOCR06 = 0x00A0;    //set direction register
+  227  1          CAN_NPCR1    =  0x0001;      // load node1 port control register
+  228  1      
+  229  1      
+  230  1        ///  Configuration of the Node 1 Baud Rate:
+  231  1        ///  - required baud rate = 250.000 kbaud
+  232  1        ///  - real baud rate     = 250.000 kbaud
+  233  1        ///  - sample point       = 60.00 %
+  234  1        ///  - there are 5 time quanta before sample point
+  235  1        ///  - there are 4 time quanta after sample point
+  236  1        ///  - the (re)synchronization jump width is 2 time quanta
+  237  1      
+  238  1          CAN_NBTR1L   =  0x344F;      // load NBTR1_DIV8, TSEG2, TSEG1, SJW and BRP
+  239  1      
+  240  1        ///  Configuration of the Node 1 Error Counter:
+  241  1        ///  - the error warning threshold value (warning level) is 96
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 5   
+
+  242  1      
+  243  1          CAN_NECNT1H = 0x0060;        // load NECNT1_EWRNLVL register
+  244  1          CAN_NECNT1L = 0x0000;       
+  245  1      
+  246  1        ///  Configuration of the Frame Counter:
+  247  1        ///  - Frame Counter Mode: the counter is incremented upon the reception 
+  248  1        ///    and transmission of frames
+  249  1        ///  - frame counter: 0x0000
+  250  1      
+  251  1          CAN_NFCR1H = 0x0000;         // load NFCR1_CFCOV, CFCIE, CFMOD, CFSEL
+  252  1          CAN_NFCR1L = 0x0000;         // load NFCR1_CFC
+  253  1      
+  254  1        ///  -----------------------------------------------------------------------
+  255  1        ///  Configuration of CAN Node 2:
+  256  1        ///  -----------------------------------------------------------------------
+  257  1      
+  258  1        ///  General Configuration of the Node 2:
+  259  1        ///  - set INIT and CCE
+  260  1      
+  261  1          CAN_NCR2     =  0x0041;      // load NODE 2 control register[15-0]
+  262  1      
+  263  1        ///  - load NODE 2 interrupt pointer register
+  264  1      
+  265  1          CAN_NIPR2    =  0x0000;      // load NIPR2_LECINP, ALINP, CFCINP and TRINP
+  266  1      
+  267  1        ///  Configuration of the used CAN Port Pins:
+  268  1        ///  - Loop-back mode is disabled
+  269  1        ///  - P4.3 is used for CAN2 Receive inputA(RXDC2A)
+  270  1        ///  - P4.2 is used for CAN2 Transmit output(TXDC2B)
+  271  1      
+  272  1        P4_IOCR02 = 0x00A0;    //set direction register
+  273  1          CAN_NPCR2    =  0x0000;      // load node2 port control register
+  274  1      
+  275  1      
+  276  1        ///  Configuration of the Node 2 Baud Rate:
+  277  1        ///  - required baud rate = 250.000 kbaud
+  278  1        ///  - real baud rate     = 250.000 kbaud
+  279  1        ///  - sample point       = 60.00 %
+  280  1        ///  - there are 5 time quanta before sample point
+  281  1        ///  - there are 4 time quanta after sample point
+  282  1        ///  - the (re)synchronization jump width is 2 time quanta
+  283  1      
+  284  1          CAN_NBTR2L   =  0x344F;      // load NBTR2_DIV8, TSEG2, TSEG1, SJW and BRP
+  285  1      
+  286  1        ///  Configuration of the Node 2 Error Counter:
+  287  1        ///  - the error warning threshold value (warning level) is 96
+  288  1      
+  289  1          CAN_NECNT2H = 0x0060;        // load NECNT2_EWRNLVL register
+  290  1          CAN_NECNT2L = 0x0000;       
+  291  1      
+  292  1        ///  Configuration of the Frame Counter:
+  293  1        ///  - Frame Counter Mode: the counter is incremented upon the reception 
+  294  1        ///    and transmission of frames
+  295  1        ///  - frame counter: 0x0000
+  296  1      
+  297  1          CAN_NFCR2H = 0x0000;         // load NFCR2_CFCOV, CFCIE, CFMOD, CFSEL
+  298  1          CAN_NFCR2L = 0x0000;         // load NFCR2_CFC
+  299  1      
+  300  1        ///  -----------------------------------------------------------------------
+  301  1        ///  Configuration of CAN Node 3:
+  302  1        ///  -----------------------------------------------------------------------
+  303  1      
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 6   
+
+  304  1        ///  General Configuration of the Node 3:
+  305  1        ///  - set INIT and CCE
+  306  1      
+  307  1          CAN_NCR3     =  0x0041;      // load NODE 3 control register[15-0]
+  308  1      
+  309  1        ///  -----------------------------------------------------------------------
+  310  1        ///  Configuration of CAN Node 4:
+  311  1        ///  -----------------------------------------------------------------------
+  312  1      
+  313  1        ///  General Configuration of the Node 4:
+  314  1        ///  - set INIT and CCE
+  315  1      
+  316  1          CAN_NCR4     =  0x0041;      // load NODE 4 control register[15-0]
+  317  1      
+  318  1        ///  -----------------------------------------------------------------------
+  319  1        ///  Configuration of CAN Node 5:
+  320  1        ///  -----------------------------------------------------------------------
+  321  1      
+  322  1        ///  General Configuration of the Node 5:
+  323  1        ///  - set INIT and CCE
+  324  1      
+  325  1          CAN_NCR5     =  0x0041;      // load NODE 5 control register[15-0]
+  326  1      
+  327  1        ///  -----------------------------------------------------------------------
+  328  1        ///  Configuration of the CAN Message Object List Structure:
+  329  1        ///  -----------------------------------------------------------------------
+  330  1      
+  331  1        ///  Allocate MOs for list 1:
+  332  1      
+  333  1          SetListCommand(0x0105,0x0002);  // MO5 for list 1 (Node 0)
+  334  1      
+  335  1          SetListCommand(0x0102,0x0002);  // MO2 for list 1 (Node 0)
+  336  1      
+  337  1          SetListCommand(0x0101,0x0002);  // MO1 for list 1 (Node 0)
+  338  1      
+  339  1        ///  Allocate MOs for list 2:
+  340  1      
+  341  1          SetListCommand(0x0204,0x0002);  // MO4 for list 2 (Node 1)
+  342  1      
+  343  1          SetListCommand(0x0203,0x0002);  // MO3 for list 2 (Node 1)
+  344  1      
+  345  1        ///  Allocate MOs for list 3:
+  346  1      
+  347  1          SetListCommand(0x0300,0x0002);  // MO0 for list 3 (Node 2)
+  348  1      
+  349  1        ///  -----------------------------------------------------------------------
+  350  1        ///  Configuration of the CAN Message Objects 0 - 254:
+  351  1        ///  -----------------------------------------------------------------------
+  352  1        ///  -----------------------------------------------------------------------
+  353  1        ///  Configuration of Message Object 0:
+  354  1        ///  -----------------------------------------------------------------------
+  355  1      
+  356  1        ///  General Configuration of the Message Object 0 :
+  357  1        ///  - message object 0 is valid
+  358  1        ///  - message object is used as transmit object
+  359  1        ///  - this message object is assigned to list 3 (node 2)
+  360  1      
+  361  1          CAN_MOCTR0H = 0x0EA8;        // load MO0 control register high
+  362  1          CAN_MOCTR0L = 0x0000;        // load MO0 control register low
+  363  1      
+  364  1        ///  Configuration of Message Object 0 Arbitration:
+  365  1        ///  - priority class 1; transmit acceptance filtering is based on the list 
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 7   
+
+  366  1        ///    order
+  367  1        ///  - standard 11-bit identifier
+  368  1        ///  - identifier 11-bit:      0x203
+  369  1      
+  370  1          CAN_MOAR0H = 0x480C;         // load MO0 arbitration register high
+  371  1          CAN_MOAR0L = 0x0000;         // load MO0 arbitration register low
+  372  1      
+  373  1        ///  Configuration of Message Object 0 Data:
+  374  1      
+  375  1          CAN_MODATA0HH = 0x0000;      // load MO0 Data Bytes(DB7 & DB6)
+  376  1          CAN_MODATA0HL = 0x0000;      // load MO0 Data Bytes(DB5 & DB4)
+  377  1          CAN_MODATA0LH = 0x0000;      // load MO0 Data Bytes(DB3 & DB2)
+  378  1          CAN_MODATA0LL = 0x0000;      // load MO0 Data Bytes(DB1 & DB0)
+  379  1      
+  380  1        ///  Configuration of Message Object 0 acceptance mask:
+  381  1        ///  - only accept receive frames with matching IDE bit
+  382  1        ///  - acceptance mask 11-bit: 0x7FF
+  383  1      
+  384  1          CAN_MOAMR0H = 0x3FFF;        // load MO0 acceptance mask register high
+  385  1          CAN_MOAMR0L = 0xFFFF;        // load MO0 acceptance mask register low
+  386  1      
+  387  1        ///  Configuration of Message Object 0 interrupt pointer:
+  388  1        ///  - use message pending register 0 bit position 0
+  389  1      
+  390  1          CAN_MOIPR0H = 0x0000;        // load MO0 interrupt pointer register high
+  391  1          CAN_MOIPR0L = 0x0000;        // load MO0 interrupt pointer register low
+  392  1      
+  393  1        ///  Configuration of Message Object 0 FIFO/Gateway pointer:
+  394  1      
+  395  1          CAN_MOFGPR0H = 0x0000;       // load MO0 FIFO/gateway pointer register 
+  396  1                                       // high
+  397  1          CAN_MOFGPR0L = 0x0000;       // load MO0 FIFO/gateway pointer register low
+  398  1      
+  399  1      
+  400  1        ///  Configuration of Message Object 0 Function control:
+  401  1        ///  - this object is a STANDARD MESSAGE OBJECT
+  402  1        ///  - 8 valid data bytes
+  403  1      
+  404  1          CAN_MOFCR0H = 0x0800;        // load MO0 function control register high
+  405  1          CAN_MOFCR0L = 0x0000;        // load MO0 function control register low
+  406  1      
+  407  1        ///  -----------------------------------------------------------------------
+  408  1        ///  Configuration of Message Object 1:
+  409  1        ///  -----------------------------------------------------------------------
+  410  1      
+  411  1        ///  General Configuration of the Message Object 1 :
+  412  1        ///  - message object 1 is valid
+  413  1        ///  - message object is used as transmit object
+  414  1        ///  - this message object is assigned to list 1 (node 0)
+  415  1      
+  416  1          CAN_MOCTR1H = 0x0EA8;        // load MO1 control register high
+  417  1          CAN_MOCTR1L = 0x0000;        // load MO1 control register low
+  418  1      
+  419  1        ///  Configuration of Message Object 1 Arbitration:
+  420  1        ///  - priority class 1; transmit acceptance filtering is based on the list 
+  421  1        ///    order
+  422  1        ///  - extended 29-bit identifier
+  423  1        ///  - identifier 29-bit:      0x08C1EF21
+  424  1      
+  425  1          CAN_MOAR1H = 0x68C1;         // load MO1 arbitration register high
+  426  1          CAN_MOAR1L = 0xEF21;         // load MO1 arbitration register low
+  427  1      
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 8   
+
+  428  1        ///  Configuration of Message Object 1 Data:
+  429  1      
+  430  1          CAN_MODATA1HH = 0x0000;      // load MO1 Data Bytes(DB7 & DB6)
+  431  1          CAN_MODATA1HL = 0x0000;      // load MO1 Data Bytes(DB5 & DB4)
+  432  1          CAN_MODATA1LH = 0x0000;      // load MO1 Data Bytes(DB3 & DB2)
+  433  1          CAN_MODATA1LL = 0x0000;      // load MO1 Data Bytes(DB1 & DB0)
+  434  1      
+  435  1        ///  Configuration of Message Object 1 acceptance mask:
+  436  1        ///  - only accept receive frames with matching IDE bit
+  437  1        ///  - acceptance mask 29-bit: 0x1FFFFFFF
+  438  1      
+  439  1          CAN_MOAMR1H = 0x3FFF;        // load MO1 acceptance mask register high
+  440  1          CAN_MOAMR1L = 0xFFFF;        // load MO1 acceptance mask register low
+  441  1      
+  442  1        ///  Configuration of Message Object 1 interrupt pointer:
+  443  1        ///  - use message pending register 0 bit position 1
+  444  1      
+  445  1          CAN_MOIPR1H = 0x0000;        // load MO1 interrupt pointer register high
+  446  1          CAN_MOIPR1L = 0x0100;        // load MO1 interrupt pointer register low
+  447  1      
+  448  1        ///  Configuration of Message Object 1 FIFO/Gateway pointer:
+  449  1      
+  450  1          CAN_MOFGPR1H = 0x0000;       // load MO1 FIFO/gateway pointer register 
+  451  1                                       // high
+  452  1          CAN_MOFGPR1L = 0x0000;       // load MO1 FIFO/gateway pointer register low
+  453  1      
+  454  1      
+  455  1        ///  Configuration of Message Object 1 Function control:
+  456  1        ///  - this object is a STANDARD MESSAGE OBJECT
+  457  1        ///  - 8 valid data bytes
+  458  1      
+  459  1          CAN_MOFCR1H = 0x0800;        // load MO1 function control register high
+  460  1          CAN_MOFCR1L = 0x0000;        // load MO1 function control register low
+  461  1      
+  462  1        ///  -----------------------------------------------------------------------
+  463  1        ///  Configuration of Message Object 2:
+  464  1        ///  -----------------------------------------------------------------------
+  465  1      
+  466  1        ///  General Configuration of the Message Object 2 :
+  467  1        ///  - message object 2 is valid
+  468  1        ///  - message object is used as receive object
+  469  1        ///  - this message object is assigned to list 1 (node 0)
+  470  1      
+  471  1          CAN_MOCTR2H = 0x00A0;        // load MO2 control register high
+  472  1          CAN_MOCTR2L = 0x0000;        // load MO2 control register low
+  473  1      
+  474  1        ///  Configuration of Message Object 2 Arbitration:
+  475  1        ///  - priority class 1; transmit acceptance filtering is based on the list 
+  476  1        ///    order
+  477  1        ///  - extended 29-bit identifier
+  478  1        ///  - identifier 29-bit:      0x0CFFC6EF
+  479  1      
+  480  1          CAN_MOAR2H = 0x6CFF;         // load MO2 arbitration register high
+  481  1          CAN_MOAR2L = 0xC6EF;         // load MO2 arbitration register low
+  482  1      
+  483  1        ///  Configuration of Message Object 2 acceptance mask:
+  484  1        ///  - only accept receive frames with matching IDE bit
+  485  1        ///  - acceptance mask 29-bit: 0x1FFFFFFF
+  486  1      
+  487  1          CAN_MOAMR2H = 0x3FFF;        // load MO2 acceptance mask register high
+  488  1          CAN_MOAMR2L = 0xFFFF;        // load MO2 acceptance mask register low
+  489  1      
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 9   
+
+  490  1        ///  Configuration of Message Object 2 interrupt pointer:
+  491  1        ///  - use message pending register 0 bit position 2
+  492  1        ///  - receive interrupt node pointer: MultiCAN SRN 0
+  493  1      
+  494  1          CAN_MOIPR2H = 0x0000;        // load MO2 interrupt pointer register high
+  495  1          CAN_MOIPR2L = 0x0200;        // load MO2 interrupt pointer register low
+  496  1      
+  497  1        ///  Configuration of Message Object 2 FIFO/Gateway pointer:
+  498  1      
+  499  1          CAN_MOFGPR2H = 0x0000;       // load MO2 FIFO/gateway pointer register 
+  500  1                                       // high
+  501  1          CAN_MOFGPR2L = 0x0000;       // load MO2 FIFO/gateway pointer register low
+  502  1      
+  503  1      
+  504  1        ///  Configuration of Message Object 2 Function control:
+  505  1        ///  - this object is a STANDARD MESSAGE OBJECT
+  506  1        ///  - 8 valid data bytes
+  507  1        ///  - enable receive interrupt; bit RXPND is set after successful 
+  508  1        ///    reception of a frame
+  509  1      
+  510  1          CAN_MOFCR2H = 0x0801;        // load MO2 function control register high
+  511  1          CAN_MOFCR2L = 0x0000;        // load MO2 function control register low
+  512  1      
+  513  1        ///  -----------------------------------------------------------------------
+  514  1        ///  Configuration of Message Object 3:
+  515  1        ///  -----------------------------------------------------------------------
+  516  1      
+  517  1        ///  General Configuration of the Message Object 3 :
+  518  1        ///  - message object 3 is valid
+  519  1        ///  - message object is used as receive object
+  520  1        ///  - this message object is assigned to list 2 (node 1)
+  521  1      
+  522  1          CAN_MOCTR3H = 0x00A0;        // load MO3 control register high
+  523  1          CAN_MOCTR3L = 0x0000;        // load MO3 control register low
+  524  1      
+  525  1        ///  Configuration of Message Object 3 Arbitration:
+  526  1        ///  - priority class 1; transmit acceptance filtering is based on the list 
+  527  1        ///    order
+  528  1        ///  - extended 29-bit identifier
+  529  1        ///  - identifier 29-bit:      0x186040F3
+  530  1      
+  531  1          CAN_MOAR3H = 0x7860;         // load MO3 arbitration register high
+  532  1          CAN_MOAR3L = 0x40F3;         // load MO3 arbitration register low
+  533  1      
+  534  1        ///  Configuration of Message Object 3 acceptance mask:
+  535  1        ///  - only accept receive frames with matching IDE bit
+  536  1        ///  - acceptance mask 29-bit: 0x1FFFFFFF
+  537  1      
+  538  1          CAN_MOAMR3H = 0x3FFF;        // load MO3 acceptance mask register high
+  539  1          CAN_MOAMR3L = 0xFFFF;        // load MO3 acceptance mask register low
+  540  1      
+  541  1        ///  Configuration of Message Object 3 interrupt pointer:
+  542  1        ///  - use message pending register 0 bit position 3
+  543  1        ///  - receive interrupt node pointer: MultiCAN SRN 0
+  544  1      
+  545  1          CAN_MOIPR3H = 0x0000;        // load MO3 interrupt pointer register high
+  546  1          CAN_MOIPR3L = 0x0300;        // load MO3 interrupt pointer register low
+  547  1      
+  548  1        ///  Configuration of Message Object 3 FIFO/Gateway pointer:
+  549  1      
+  550  1          CAN_MOFGPR3H = 0x0000;       // load MO3 FIFO/gateway pointer register 
+  551  1                                       // high
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 10  
+
+  552  1          CAN_MOFGPR3L = 0x0000;       // load MO3 FIFO/gateway pointer register low
+  553  1      
+  554  1      
+  555  1        ///  Configuration of Message Object 3 Function control:
+  556  1        ///  - this object is a STANDARD MESSAGE OBJECT
+  557  1        ///  - 8 valid data bytes
+  558  1        ///  - enable receive interrupt; bit RXPND is set after successful 
+  559  1        ///    reception of a frame
+  560  1      
+  561  1          CAN_MOFCR3H = 0x0801;        // load MO3 function control register high
+  562  1          CAN_MOFCR3L = 0x0000;        // load MO3 function control register low
+  563  1      
+  564  1        ///  -----------------------------------------------------------------------
+  565  1        ///  Configuration of Message Object 4:
+  566  1        ///  -----------------------------------------------------------------------
+  567  1      
+  568  1        ///  General Configuration of the Message Object 4 :
+  569  1        ///  - message object 4 is valid
+  570  1        ///  - message object is used as receive object
+  571  1        ///  - this message object is assigned to list 2 (node 1)
+  572  1      
+  573  1          CAN_MOCTR4H = 0x00A0;        // load MO4 control register high
+  574  1          CAN_MOCTR4L = 0x0000;        // load MO4 control register low
+  575  1      
+  576  1        ///  Configuration of Message Object 4 Arbitration:
+  577  1        ///  - priority class 1; transmit acceptance filtering is based on the list 
+  578  1        ///    order
+  579  1        ///  - extended 29-bit identifier
+  580  1        ///  - identifier 29-bit:      0x186240F3
+  581  1      
+  582  1          CAN_MOAR4H = 0x7862;         // load MO4 arbitration register high
+  583  1          CAN_MOAR4L = 0x40F3;         // load MO4 arbitration register low
+  584  1      
+  585  1        ///  Configuration of Message Object 4 acceptance mask:
+  586  1        ///  - only accept receive frames with matching IDE bit
+  587  1        ///  - acceptance mask 29-bit: 0x1FFFFFFF
+  588  1      
+  589  1          CAN_MOAMR4H = 0x3FFF;        // load MO4 acceptance mask register high
+  590  1          CAN_MOAMR4L = 0xFFFF;        // load MO4 acceptance mask register low
+  591  1      
+  592  1        ///  Configuration of Message Object 4 interrupt pointer:
+  593  1        ///  - use message pending register 0 bit position 4
+  594  1        ///  - receive interrupt node pointer: MultiCAN SRN 0
+  595  1      
+  596  1          CAN_MOIPR4H = 0x0000;        // load MO4 interrupt pointer register high
+  597  1          CAN_MOIPR4L = 0x0400;        // load MO4 interrupt pointer register low
+  598  1      
+  599  1        ///  Configuration of Message Object 4 FIFO/Gateway pointer:
+  600  1      
+  601  1          CAN_MOFGPR4H = 0x0000;       // load MO4 FIFO/gateway pointer register 
+  602  1                                       // high
+  603  1          CAN_MOFGPR4L = 0x0000;       // load MO4 FIFO/gateway pointer register low
+  604  1      
+  605  1      
+  606  1        ///  Configuration of Message Object 4 Function control:
+  607  1        ///  - this object is a STANDARD MESSAGE OBJECT
+  608  1        ///  - 8 valid data bytes
+  609  1        ///  - enable receive interrupt; bit RXPND is set after successful 
+  610  1        ///    reception of a frame
+  611  1      
+  612  1          CAN_MOFCR4H = 0x0801;        // load MO4 function control register high
+  613  1          CAN_MOFCR4L = 0x0000;        // load MO4 function control register low
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 11  
+
+  614  1      
+  615  1        ///  -----------------------------------------------------------------------
+  616  1        ///  Configuration of Message Object 5:
+  617  1        ///  -----------------------------------------------------------------------
+  618  1      
+  619  1        ///  General Configuration of the Message Object 5 :
+  620  1        ///  - message object 5 is valid
+  621  1        ///  - message object is used as receive object
+  622  1        ///  - this message object is assigned to list 1 (node 0)
+  623  1      
+  624  1          CAN_MOCTR5H = 0x00A0;        // load MO5 control register high
+  625  1          CAN_MOCTR5L = 0x0000;        // load MO5 control register low
+  626  1      
+  627  1        ///  Configuration of Message Object 5 Arbitration:
+  628  1        ///  - priority class 1; transmit acceptance filtering is based on the list 
+  629  1        ///    order
+  630  1        ///  - extended 29-bit identifier
+  631  1        ///  - identifier 29-bit:      0x0CFFC7EF
+  632  1      
+  633  1          CAN_MOAR5H = 0x6CFF;         // load MO5 arbitration register high
+  634  1          CAN_MOAR5L = 0xC7EF;         // load MO5 arbitration register low
+  635  1      
+  636  1        ///  Configuration of Message Object 5 acceptance mask:
+  637  1        ///  - only accept receive frames with matching IDE bit
+  638  1        ///  - acceptance mask 29-bit: 0x1FFFFFFF
+  639  1      
+  640  1          CAN_MOAMR5H = 0x3FFF;        // load MO5 acceptance mask register high
+  641  1          CAN_MOAMR5L = 0xFFFF;        // load MO5 acceptance mask register low
+  642  1      
+  643  1        ///  Configuration of Message Object 5 interrupt pointer:
+  644  1        ///  - use message pending register 0 bit position 5
+  645  1        ///  - receive interrupt node pointer: MultiCAN SRN 0
+  646  1      
+  647  1          CAN_MOIPR5H = 0x0000;        // load MO5 interrupt pointer register high
+  648  1          CAN_MOIPR5L = 0x0500;        // load MO5 interrupt pointer register low
+  649  1      
+  650  1        ///  Configuration of Message Object 5 FIFO/Gateway pointer:
+  651  1      
+  652  1          CAN_MOFGPR5H = 0x0000;       // load MO5 FIFO/gateway pointer register 
+  653  1                                       // high
+  654  1          CAN_MOFGPR5L = 0x0000;       // load MO5 FIFO/gateway pointer register low
+  655  1      
+  656  1      
+  657  1        ///  Configuration of Message Object 5 Function control:
+  658  1        ///  - this object is a STANDARD MESSAGE OBJECT
+  659  1        ///  - 8 valid data bytes
+  660  1        ///  - enable receive interrupt; bit RXPND is set after successful 
+  661  1        ///    reception of a frame
+  662  1      
+  663  1          CAN_MOFCR5H = 0x0801;        // load MO5 function control register high
+  664  1          CAN_MOFCR5L = 0x0000;        // load MO5 function control register low
+  665  1      
+  666  1        ///  -----------------------------------------------------------------------
+  667  1        ///  Configuration of Message Object 6:
+  668  1        ///  -----------------------------------------------------------------------
+  669  1        ///  - message object 6 is not valid
+  670  1        ///  -----------------------------------------------------------------------
+  671  1        ///  Configuration of Message Object 7:
+  672  1        ///  -----------------------------------------------------------------------
+  673  1        ///  - message object 7 is not valid
+  674  1        ///  -----------------------------------------------------------------------
+  675  1        ///  Configuration of Message Object 8:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 12  
+
+  676  1        ///  -----------------------------------------------------------------------
+  677  1        ///  - message object 8 is not valid
+  678  1        ///  -----------------------------------------------------------------------
+  679  1        ///  Configuration of Message Object 9:
+  680  1        ///  -----------------------------------------------------------------------
+  681  1        ///  - message object 9 is not valid
+  682  1        ///  -----------------------------------------------------------------------
+  683  1        ///  Configuration of Message Object 10:
+  684  1        ///  -----------------------------------------------------------------------
+  685  1        ///  - message object 10 is not valid
+  686  1        ///  -----------------------------------------------------------------------
+  687  1        ///  Configuration of Message Object 11:
+  688  1        ///  -----------------------------------------------------------------------
+  689  1        ///  - message object 11 is not valid
+  690  1        ///  -----------------------------------------------------------------------
+  691  1        ///  Configuration of Message Object 12:
+  692  1        ///  -----------------------------------------------------------------------
+  693  1        ///  - message object 12 is not valid
+  694  1        ///  -----------------------------------------------------------------------
+  695  1        ///  Configuration of Message Object 13:
+  696  1        ///  -----------------------------------------------------------------------
+  697  1        ///  - message object 13 is not valid
+  698  1        ///  -----------------------------------------------------------------------
+  699  1        ///  Configuration of Message Object 14:
+  700  1        ///  -----------------------------------------------------------------------
+  701  1        ///  - message object 14 is not valid
+  702  1        ///  -----------------------------------------------------------------------
+  703  1        ///  Configuration of Message Object 15:
+  704  1        ///  -----------------------------------------------------------------------
+  705  1        ///  - message object 15 is not valid
+  706  1        ///  -----------------------------------------------------------------------
+  707  1        ///  Configuration of Message Object 16:
+  708  1        ///  -----------------------------------------------------------------------
+  709  1        ///  - message object 16 is not valid
+  710  1        ///  -----------------------------------------------------------------------
+  711  1        ///  Configuration of Message Object 17:
+  712  1        ///  -----------------------------------------------------------------------
+  713  1        ///  - message object 17 is not valid
+  714  1        ///  -----------------------------------------------------------------------
+  715  1        ///  Configuration of Message Object 18:
+  716  1        ///  -----------------------------------------------------------------------
+  717  1        ///  - message object 18 is not valid
+  718  1        ///  -----------------------------------------------------------------------
+  719  1        ///  Configuration of Message Object 19:
+  720  1        ///  -----------------------------------------------------------------------
+  721  1        ///  - message object 19 is not valid
+  722  1        ///  -----------------------------------------------------------------------
+  723  1        ///  Configuration of Message Object 20:
+  724  1        ///  -----------------------------------------------------------------------
+  725  1        ///  - message object 20 is not valid
+  726  1        ///  -----------------------------------------------------------------------
+  727  1        ///  Configuration of Message Object 21:
+  728  1        ///  -----------------------------------------------------------------------
+  729  1        ///  - message object 21 is not valid
+  730  1        ///  -----------------------------------------------------------------------
+  731  1        ///  Configuration of Message Object 22:
+  732  1        ///  -----------------------------------------------------------------------
+  733  1        ///  - message object 22 is not valid
+  734  1        ///  -----------------------------------------------------------------------
+  735  1        ///  Configuration of Message Object 23:
+  736  1        ///  -----------------------------------------------------------------------
+  737  1        ///  - message object 23 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 13  
+
+  738  1        ///  -----------------------------------------------------------------------
+  739  1        ///  Configuration of Message Object 24:
+  740  1        ///  -----------------------------------------------------------------------
+  741  1        ///  - message object 24 is not valid
+  742  1        ///  -----------------------------------------------------------------------
+  743  1        ///  Configuration of Message Object 25:
+  744  1        ///  -----------------------------------------------------------------------
+  745  1        ///  - message object 25 is not valid
+  746  1        ///  -----------------------------------------------------------------------
+  747  1        ///  Configuration of Message Object 26:
+  748  1        ///  -----------------------------------------------------------------------
+  749  1        ///  - message object 26 is not valid
+  750  1        ///  -----------------------------------------------------------------------
+  751  1        ///  Configuration of Message Object 27:
+  752  1        ///  -----------------------------------------------------------------------
+  753  1        ///  - message object 27 is not valid
+  754  1        ///  -----------------------------------------------------------------------
+  755  1        ///  Configuration of Message Object 28:
+  756  1        ///  -----------------------------------------------------------------------
+  757  1        ///  - message object 28 is not valid
+  758  1        ///  -----------------------------------------------------------------------
+  759  1        ///  Configuration of Message Object 29:
+  760  1        ///  -----------------------------------------------------------------------
+  761  1        ///  - message object 29 is not valid
+  762  1        ///  -----------------------------------------------------------------------
+  763  1        ///  Configuration of Message Object 30:
+  764  1        ///  -----------------------------------------------------------------------
+  765  1        ///  - message object 30 is not valid
+  766  1        ///  -----------------------------------------------------------------------
+  767  1        ///  Configuration of Message Object 31:
+  768  1        ///  -----------------------------------------------------------------------
+  769  1        ///  - message object 31 is not valid
+  770  1        ///  -----------------------------------------------------------------------
+  771  1        ///  Configuration of Message Object 32:
+  772  1        ///  -----------------------------------------------------------------------
+  773  1        ///  - message object 32 is not valid
+  774  1        ///  -----------------------------------------------------------------------
+  775  1        ///  Configuration of Message Object 33:
+  776  1        ///  -----------------------------------------------------------------------
+  777  1        ///  - message object 33 is not valid
+  778  1        ///  -----------------------------------------------------------------------
+  779  1        ///  Configuration of Message Object 34:
+  780  1        ///  -----------------------------------------------------------------------
+  781  1        ///  - message object 34 is not valid
+  782  1        ///  -----------------------------------------------------------------------
+  783  1        ///  Configuration of Message Object 35:
+  784  1        ///  -----------------------------------------------------------------------
+  785  1        ///  - message object 35 is not valid
+  786  1        ///  -----------------------------------------------------------------------
+  787  1        ///  Configuration of Message Object 36:
+  788  1        ///  -----------------------------------------------------------------------
+  789  1        ///  - message object 36 is not valid
+  790  1        ///  -----------------------------------------------------------------------
+  791  1        ///  Configuration of Message Object 37:
+  792  1        ///  -----------------------------------------------------------------------
+  793  1        ///  - message object 37 is not valid
+  794  1        ///  -----------------------------------------------------------------------
+  795  1        ///  Configuration of Message Object 38:
+  796  1        ///  -----------------------------------------------------------------------
+  797  1        ///  - message object 38 is not valid
+  798  1        ///  -----------------------------------------------------------------------
+  799  1        ///  Configuration of Message Object 39:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 14  
+
+  800  1        ///  -----------------------------------------------------------------------
+  801  1        ///  - message object 39 is not valid
+  802  1        ///  -----------------------------------------------------------------------
+  803  1        ///  Configuration of Message Object 40:
+  804  1        ///  -----------------------------------------------------------------------
+  805  1        ///  - message object 40 is not valid
+  806  1        ///  -----------------------------------------------------------------------
+  807  1        ///  Configuration of Message Object 41:
+  808  1        ///  -----------------------------------------------------------------------
+  809  1        ///  - message object 41 is not valid
+  810  1        ///  -----------------------------------------------------------------------
+  811  1        ///  Configuration of Message Object 42:
+  812  1        ///  -----------------------------------------------------------------------
+  813  1        ///  - message object 42 is not valid
+  814  1        ///  -----------------------------------------------------------------------
+  815  1        ///  Configuration of Message Object 43:
+  816  1        ///  -----------------------------------------------------------------------
+  817  1        ///  - message object 43 is not valid
+  818  1        ///  -----------------------------------------------------------------------
+  819  1        ///  Configuration of Message Object 44:
+  820  1        ///  -----------------------------------------------------------------------
+  821  1        ///  - message object 44 is not valid
+  822  1        ///  -----------------------------------------------------------------------
+  823  1        ///  Configuration of Message Object 45:
+  824  1        ///  -----------------------------------------------------------------------
+  825  1        ///  - message object 45 is not valid
+  826  1        ///  -----------------------------------------------------------------------
+  827  1        ///  Configuration of Message Object 46:
+  828  1        ///  -----------------------------------------------------------------------
+  829  1        ///  - message object 46 is not valid
+  830  1        ///  -----------------------------------------------------------------------
+  831  1        ///  Configuration of Message Object 47:
+  832  1        ///  -----------------------------------------------------------------------
+  833  1        ///  - message object 47 is not valid
+  834  1        ///  -----------------------------------------------------------------------
+  835  1        ///  Configuration of Message Object 48:
+  836  1        ///  -----------------------------------------------------------------------
+  837  1        ///  - message object 48 is not valid
+  838  1        ///  -----------------------------------------------------------------------
+  839  1        ///  Configuration of Message Object 49:
+  840  1        ///  -----------------------------------------------------------------------
+  841  1        ///  - message object 49 is not valid
+  842  1        ///  -----------------------------------------------------------------------
+  843  1        ///  Configuration of Message Object 50:
+  844  1        ///  -----------------------------------------------------------------------
+  845  1        ///  - message object 50 is not valid
+  846  1        ///  -----------------------------------------------------------------------
+  847  1        ///  Configuration of Message Object 51:
+  848  1        ///  -----------------------------------------------------------------------
+  849  1        ///  - message object 51 is not valid
+  850  1        ///  -----------------------------------------------------------------------
+  851  1        ///  Configuration of Message Object 52:
+  852  1        ///  -----------------------------------------------------------------------
+  853  1        ///  - message object 52 is not valid
+  854  1        ///  -----------------------------------------------------------------------
+  855  1        ///  Configuration of Message Object 53:
+  856  1        ///  -----------------------------------------------------------------------
+  857  1        ///  - message object 53 is not valid
+  858  1        ///  -----------------------------------------------------------------------
+  859  1        ///  Configuration of Message Object 54:
+  860  1        ///  -----------------------------------------------------------------------
+  861  1        ///  - message object 54 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 15  
+
+  862  1        ///  -----------------------------------------------------------------------
+  863  1        ///  Configuration of Message Object 55:
+  864  1        ///  -----------------------------------------------------------------------
+  865  1        ///  - message object 55 is not valid
+  866  1        ///  -----------------------------------------------------------------------
+  867  1        ///  Configuration of Message Object 56:
+  868  1        ///  -----------------------------------------------------------------------
+  869  1        ///  - message object 56 is not valid
+  870  1        ///  -----------------------------------------------------------------------
+  871  1        ///  Configuration of Message Object 57:
+  872  1        ///  -----------------------------------------------------------------------
+  873  1        ///  - message object 57 is not valid
+  874  1        ///  -----------------------------------------------------------------------
+  875  1        ///  Configuration of Message Object 58:
+  876  1        ///  -----------------------------------------------------------------------
+  877  1        ///  - message object 58 is not valid
+  878  1        ///  -----------------------------------------------------------------------
+  879  1        ///  Configuration of Message Object 59:
+  880  1        ///  -----------------------------------------------------------------------
+  881  1        ///  - message object 59 is not valid
+  882  1        ///  -----------------------------------------------------------------------
+  883  1        ///  Configuration of Message Object 60:
+  884  1        ///  -----------------------------------------------------------------------
+  885  1        ///  - message object 60 is not valid
+  886  1        ///  -----------------------------------------------------------------------
+  887  1        ///  Configuration of Message Object 61:
+  888  1        ///  -----------------------------------------------------------------------
+  889  1        ///  - message object 61 is not valid
+  890  1        ///  -----------------------------------------------------------------------
+  891  1        ///  Configuration of Message Object 62:
+  892  1        ///  -----------------------------------------------------------------------
+  893  1        ///  - message object 62 is not valid
+  894  1        ///  -----------------------------------------------------------------------
+  895  1        ///  Configuration of Message Object 63:
+  896  1        ///  -----------------------------------------------------------------------
+  897  1        ///  - message object 63 is not valid
+  898  1        ///  -----------------------------------------------------------------------
+  899  1        ///  Configuration of Message Object 64:
+  900  1        ///  -----------------------------------------------------------------------
+  901  1        ///  - message object 64 is not valid
+  902  1        ///  -----------------------------------------------------------------------
+  903  1        ///  Configuration of Message Object 65:
+  904  1        ///  -----------------------------------------------------------------------
+  905  1        ///  - message object 65 is not valid
+  906  1        ///  -----------------------------------------------------------------------
+  907  1        ///  Configuration of Message Object 66:
+  908  1        ///  -----------------------------------------------------------------------
+  909  1        ///  - message object 66 is not valid
+  910  1        ///  -----------------------------------------------------------------------
+  911  1        ///  Configuration of Message Object 67:
+  912  1        ///  -----------------------------------------------------------------------
+  913  1        ///  - message object 67 is not valid
+  914  1        ///  -----------------------------------------------------------------------
+  915  1        ///  Configuration of Message Object 68:
+  916  1        ///  -----------------------------------------------------------------------
+  917  1        ///  - message object 68 is not valid
+  918  1        ///  -----------------------------------------------------------------------
+  919  1        ///  Configuration of Message Object 69:
+  920  1        ///  -----------------------------------------------------------------------
+  921  1        ///  - message object 69 is not valid
+  922  1        ///  -----------------------------------------------------------------------
+  923  1        ///  Configuration of Message Object 70:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 16  
+
+  924  1        ///  -----------------------------------------------------------------------
+  925  1        ///  - message object 70 is not valid
+  926  1        ///  -----------------------------------------------------------------------
+  927  1        ///  Configuration of Message Object 71:
+  928  1        ///  -----------------------------------------------------------------------
+  929  1        ///  - message object 71 is not valid
+  930  1        ///  -----------------------------------------------------------------------
+  931  1        ///  Configuration of Message Object 72:
+  932  1        ///  -----------------------------------------------------------------------
+  933  1        ///  - message object 72 is not valid
+  934  1        ///  -----------------------------------------------------------------------
+  935  1        ///  Configuration of Message Object 73:
+  936  1        ///  -----------------------------------------------------------------------
+  937  1        ///  - message object 73 is not valid
+  938  1        ///  -----------------------------------------------------------------------
+  939  1        ///  Configuration of Message Object 74:
+  940  1        ///  -----------------------------------------------------------------------
+  941  1        ///  - message object 74 is not valid
+  942  1        ///  -----------------------------------------------------------------------
+  943  1        ///  Configuration of Message Object 75:
+  944  1        ///  -----------------------------------------------------------------------
+  945  1        ///  - message object 75 is not valid
+  946  1        ///  -----------------------------------------------------------------------
+  947  1        ///  Configuration of Message Object 76:
+  948  1        ///  -----------------------------------------------------------------------
+  949  1        ///  - message object 76 is not valid
+  950  1        ///  -----------------------------------------------------------------------
+  951  1        ///  Configuration of Message Object 77:
+  952  1        ///  -----------------------------------------------------------------------
+  953  1        ///  - message object 77 is not valid
+  954  1        ///  -----------------------------------------------------------------------
+  955  1        ///  Configuration of Message Object 78:
+  956  1        ///  -----------------------------------------------------------------------
+  957  1        ///  - message object 78 is not valid
+  958  1        ///  -----------------------------------------------------------------------
+  959  1        ///  Configuration of Message Object 79:
+  960  1        ///  -----------------------------------------------------------------------
+  961  1        ///  - message object 79 is not valid
+  962  1        ///  -----------------------------------------------------------------------
+  963  1        ///  Configuration of Message Object 80:
+  964  1        ///  -----------------------------------------------------------------------
+  965  1        ///  - message object 80 is not valid
+  966  1        ///  -----------------------------------------------------------------------
+  967  1        ///  Configuration of Message Object 81:
+  968  1        ///  -----------------------------------------------------------------------
+  969  1        ///  - message object 81 is not valid
+  970  1        ///  -----------------------------------------------------------------------
+  971  1        ///  Configuration of Message Object 82:
+  972  1        ///  -----------------------------------------------------------------------
+  973  1        ///  - message object 82 is not valid
+  974  1        ///  -----------------------------------------------------------------------
+  975  1        ///  Configuration of Message Object 83:
+  976  1        ///  -----------------------------------------------------------------------
+  977  1        ///  - message object 83 is not valid
+  978  1        ///  -----------------------------------------------------------------------
+  979  1        ///  Configuration of Message Object 84:
+  980  1        ///  -----------------------------------------------------------------------
+  981  1        ///  - message object 84 is not valid
+  982  1        ///  -----------------------------------------------------------------------
+  983  1        ///  Configuration of Message Object 85:
+  984  1        ///  -----------------------------------------------------------------------
+  985  1        ///  - message object 85 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 17  
+
+  986  1        ///  -----------------------------------------------------------------------
+  987  1        ///  Configuration of Message Object 86:
+  988  1        ///  -----------------------------------------------------------------------
+  989  1        ///  - message object 86 is not valid
+  990  1        ///  -----------------------------------------------------------------------
+  991  1        ///  Configuration of Message Object 87:
+  992  1        ///  -----------------------------------------------------------------------
+  993  1        ///  - message object 87 is not valid
+  994  1        ///  -----------------------------------------------------------------------
+  995  1        ///  Configuration of Message Object 88:
+  996  1        ///  -----------------------------------------------------------------------
+  997  1        ///  - message object 88 is not valid
+  998  1        ///  -----------------------------------------------------------------------
+  999  1        ///  Configuration of Message Object 89:
+ 1000  1        ///  -----------------------------------------------------------------------
+ 1001  1        ///  - message object 89 is not valid
+ 1002  1        ///  -----------------------------------------------------------------------
+ 1003  1        ///  Configuration of Message Object 90:
+ 1004  1        ///  -----------------------------------------------------------------------
+ 1005  1        ///  - message object 90 is not valid
+ 1006  1        ///  -----------------------------------------------------------------------
+ 1007  1        ///  Configuration of Message Object 91:
+ 1008  1        ///  -----------------------------------------------------------------------
+ 1009  1        ///  - message object 91 is not valid
+ 1010  1        ///  -----------------------------------------------------------------------
+ 1011  1        ///  Configuration of Message Object 92:
+ 1012  1        ///  -----------------------------------------------------------------------
+ 1013  1        ///  - message object 92 is not valid
+ 1014  1        ///  -----------------------------------------------------------------------
+ 1015  1        ///  Configuration of Message Object 93:
+ 1016  1        ///  -----------------------------------------------------------------------
+ 1017  1        ///  - message object 93 is not valid
+ 1018  1        ///  -----------------------------------------------------------------------
+ 1019  1        ///  Configuration of Message Object 94:
+ 1020  1        ///  -----------------------------------------------------------------------
+ 1021  1        ///  - message object 94 is not valid
+ 1022  1        ///  -----------------------------------------------------------------------
+ 1023  1        ///  Configuration of Message Object 95:
+ 1024  1        ///  -----------------------------------------------------------------------
+ 1025  1        ///  - message object 95 is not valid
+ 1026  1        ///  -----------------------------------------------------------------------
+ 1027  1        ///  Configuration of Message Object 96:
+ 1028  1        ///  -----------------------------------------------------------------------
+ 1029  1        ///  - message object 96 is not valid
+ 1030  1        ///  -----------------------------------------------------------------------
+ 1031  1        ///  Configuration of Message Object 97:
+ 1032  1        ///  -----------------------------------------------------------------------
+ 1033  1        ///  - message object 97 is not valid
+ 1034  1        ///  -----------------------------------------------------------------------
+ 1035  1        ///  Configuration of Message Object 98:
+ 1036  1        ///  -----------------------------------------------------------------------
+ 1037  1        ///  - message object 98 is not valid
+ 1038  1        ///  -----------------------------------------------------------------------
+ 1039  1        ///  Configuration of Message Object 99:
+ 1040  1        ///  -----------------------------------------------------------------------
+ 1041  1        ///  - message object 99 is not valid
+ 1042  1        ///  -----------------------------------------------------------------------
+ 1043  1        ///  Configuration of Message Object 100:
+ 1044  1        ///  -----------------------------------------------------------------------
+ 1045  1        ///  - message object 100 is not valid
+ 1046  1        ///  -----------------------------------------------------------------------
+ 1047  1        ///  Configuration of Message Object 101:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 18  
+
+ 1048  1        ///  -----------------------------------------------------------------------
+ 1049  1        ///  - message object 101 is not valid
+ 1050  1        ///  -----------------------------------------------------------------------
+ 1051  1        ///  Configuration of Message Object 102:
+ 1052  1        ///  -----------------------------------------------------------------------
+ 1053  1        ///  - message object 102 is not valid
+ 1054  1        ///  -----------------------------------------------------------------------
+ 1055  1        ///  Configuration of Message Object 103:
+ 1056  1        ///  -----------------------------------------------------------------------
+ 1057  1        ///  - message object 103 is not valid
+ 1058  1        ///  -----------------------------------------------------------------------
+ 1059  1        ///  Configuration of Message Object 104:
+ 1060  1        ///  -----------------------------------------------------------------------
+ 1061  1        ///  - message object 104 is not valid
+ 1062  1        ///  -----------------------------------------------------------------------
+ 1063  1        ///  Configuration of Message Object 105:
+ 1064  1        ///  -----------------------------------------------------------------------
+ 1065  1        ///  - message object 105 is not valid
+ 1066  1        ///  -----------------------------------------------------------------------
+ 1067  1        ///  Configuration of Message Object 106:
+ 1068  1        ///  -----------------------------------------------------------------------
+ 1069  1        ///  - message object 106 is not valid
+ 1070  1        ///  -----------------------------------------------------------------------
+ 1071  1        ///  Configuration of Message Object 107:
+ 1072  1        ///  -----------------------------------------------------------------------
+ 1073  1        ///  - message object 107 is not valid
+ 1074  1        ///  -----------------------------------------------------------------------
+ 1075  1        ///  Configuration of Message Object 108:
+ 1076  1        ///  -----------------------------------------------------------------------
+ 1077  1        ///  - message object 108 is not valid
+ 1078  1        ///  -----------------------------------------------------------------------
+ 1079  1        ///  Configuration of Message Object 109:
+ 1080  1        ///  -----------------------------------------------------------------------
+ 1081  1        ///  - message object 109 is not valid
+ 1082  1        ///  -----------------------------------------------------------------------
+ 1083  1        ///  Configuration of Message Object 110:
+ 1084  1        ///  -----------------------------------------------------------------------
+ 1085  1        ///  - message object 110 is not valid
+ 1086  1        ///  -----------------------------------------------------------------------
+ 1087  1        ///  Configuration of Message Object 111:
+ 1088  1        ///  -----------------------------------------------------------------------
+ 1089  1        ///  - message object 111 is not valid
+ 1090  1        ///  -----------------------------------------------------------------------
+ 1091  1        ///  Configuration of Message Object 112:
+ 1092  1        ///  -----------------------------------------------------------------------
+ 1093  1        ///  - message object 112 is not valid
+ 1094  1        ///  -----------------------------------------------------------------------
+ 1095  1        ///  Configuration of Message Object 113:
+ 1096  1        ///  -----------------------------------------------------------------------
+ 1097  1        ///  - message object 113 is not valid
+ 1098  1        ///  -----------------------------------------------------------------------
+ 1099  1        ///  Configuration of Message Object 114:
+ 1100  1        ///  -----------------------------------------------------------------------
+ 1101  1        ///  - message object 114 is not valid
+ 1102  1        ///  -----------------------------------------------------------------------
+ 1103  1        ///  Configuration of Message Object 115:
+ 1104  1        ///  -----------------------------------------------------------------------
+ 1105  1        ///  - message object 115 is not valid
+ 1106  1        ///  -----------------------------------------------------------------------
+ 1107  1        ///  Configuration of Message Object 116:
+ 1108  1        ///  -----------------------------------------------------------------------
+ 1109  1        ///  - message object 116 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 19  
+
+ 1110  1        ///  -----------------------------------------------------------------------
+ 1111  1        ///  Configuration of Message Object 117:
+ 1112  1        ///  -----------------------------------------------------------------------
+ 1113  1        ///  - message object 117 is not valid
+ 1114  1        ///  -----------------------------------------------------------------------
+ 1115  1        ///  Configuration of Message Object 118:
+ 1116  1        ///  -----------------------------------------------------------------------
+ 1117  1        ///  - message object 118 is not valid
+ 1118  1        ///  -----------------------------------------------------------------------
+ 1119  1        ///  Configuration of Message Object 119:
+ 1120  1        ///  -----------------------------------------------------------------------
+ 1121  1        ///  - message object 119 is not valid
+ 1122  1        ///  -----------------------------------------------------------------------
+ 1123  1        ///  Configuration of Message Object 120:
+ 1124  1        ///  -----------------------------------------------------------------------
+ 1125  1        ///  - message object 120 is not valid
+ 1126  1        ///  -----------------------------------------------------------------------
+ 1127  1        ///  Configuration of Message Object 121:
+ 1128  1        ///  -----------------------------------------------------------------------
+ 1129  1        ///  - message object 121 is not valid
+ 1130  1        ///  -----------------------------------------------------------------------
+ 1131  1        ///  Configuration of Message Object 122:
+ 1132  1        ///  -----------------------------------------------------------------------
+ 1133  1        ///  - message object 122 is not valid
+ 1134  1        ///  -----------------------------------------------------------------------
+ 1135  1        ///  Configuration of Message Object 123:
+ 1136  1        ///  -----------------------------------------------------------------------
+ 1137  1        ///  - message object 123 is not valid
+ 1138  1        ///  -----------------------------------------------------------------------
+ 1139  1        ///  Configuration of Message Object 124:
+ 1140  1        ///  -----------------------------------------------------------------------
+ 1141  1        ///  - message object 124 is not valid
+ 1142  1        ///  -----------------------------------------------------------------------
+ 1143  1        ///  Configuration of Message Object 125:
+ 1144  1        ///  -----------------------------------------------------------------------
+ 1145  1        ///  - message object 125 is not valid
+ 1146  1        ///  -----------------------------------------------------------------------
+ 1147  1        ///  Configuration of Message Object 126:
+ 1148  1        ///  -----------------------------------------------------------------------
+ 1149  1        ///  - message object 126 is not valid
+ 1150  1        ///  -----------------------------------------------------------------------
+ 1151  1        ///  Configuration of Message Object 127:
+ 1152  1        ///  -----------------------------------------------------------------------
+ 1153  1        ///  - message object 127 is not valid
+ 1154  1        ///  -----------------------------------------------------------------------
+ 1155  1        ///  Configuration of Message Object 128:
+ 1156  1        ///  -----------------------------------------------------------------------
+ 1157  1        ///  - message object 128 is not valid
+ 1158  1        ///  -----------------------------------------------------------------------
+ 1159  1        ///  Configuration of Message Object 129:
+ 1160  1        ///  -----------------------------------------------------------------------
+ 1161  1        ///  - message object 129 is not valid
+ 1162  1        ///  -----------------------------------------------------------------------
+ 1163  1        ///  Configuration of Message Object 130:
+ 1164  1        ///  -----------------------------------------------------------------------
+ 1165  1        ///  - message object 130 is not valid
+ 1166  1        ///  -----------------------------------------------------------------------
+ 1167  1        ///  Configuration of Message Object 131:
+ 1168  1        ///  -----------------------------------------------------------------------
+ 1169  1        ///  - message object 131 is not valid
+ 1170  1        ///  -----------------------------------------------------------------------
+ 1171  1        ///  Configuration of Message Object 132:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 20  
+
+ 1172  1        ///  -----------------------------------------------------------------------
+ 1173  1        ///  - message object 132 is not valid
+ 1174  1        ///  -----------------------------------------------------------------------
+ 1175  1        ///  Configuration of Message Object 133:
+ 1176  1        ///  -----------------------------------------------------------------------
+ 1177  1        ///  - message object 133 is not valid
+ 1178  1        ///  -----------------------------------------------------------------------
+ 1179  1        ///  Configuration of Message Object 134:
+ 1180  1        ///  -----------------------------------------------------------------------
+ 1181  1        ///  - message object 134 is not valid
+ 1182  1        ///  -----------------------------------------------------------------------
+ 1183  1        ///  Configuration of Message Object 135:
+ 1184  1        ///  -----------------------------------------------------------------------
+ 1185  1        ///  - message object 135 is not valid
+ 1186  1        ///  -----------------------------------------------------------------------
+ 1187  1        ///  Configuration of Message Object 136:
+ 1188  1        ///  -----------------------------------------------------------------------
+ 1189  1        ///  - message object 136 is not valid
+ 1190  1        ///  -----------------------------------------------------------------------
+ 1191  1        ///  Configuration of Message Object 137:
+ 1192  1        ///  -----------------------------------------------------------------------
+ 1193  1        ///  - message object 137 is not valid
+ 1194  1        ///  -----------------------------------------------------------------------
+ 1195  1        ///  Configuration of Message Object 138:
+ 1196  1        ///  -----------------------------------------------------------------------
+ 1197  1        ///  - message object 138 is not valid
+ 1198  1        ///  -----------------------------------------------------------------------
+ 1199  1        ///  Configuration of Message Object 139:
+ 1200  1        ///  -----------------------------------------------------------------------
+ 1201  1        ///  - message object 139 is not valid
+ 1202  1        ///  -----------------------------------------------------------------------
+ 1203  1        ///  Configuration of Message Object 140:
+ 1204  1        ///  -----------------------------------------------------------------------
+ 1205  1        ///  - message object 140 is not valid
+ 1206  1        ///  -----------------------------------------------------------------------
+ 1207  1        ///  Configuration of Message Object 141:
+ 1208  1        ///  -----------------------------------------------------------------------
+ 1209  1        ///  - message object 141 is not valid
+ 1210  1        ///  -----------------------------------------------------------------------
+ 1211  1        ///  Configuration of Message Object 142:
+ 1212  1        ///  -----------------------------------------------------------------------
+ 1213  1        ///  - message object 142 is not valid
+ 1214  1        ///  -----------------------------------------------------------------------
+ 1215  1        ///  Configuration of Message Object 143:
+ 1216  1        ///  -----------------------------------------------------------------------
+ 1217  1        ///  - message object 143 is not valid
+ 1218  1        ///  -----------------------------------------------------------------------
+ 1219  1        ///  Configuration of Message Object 144:
+ 1220  1        ///  -----------------------------------------------------------------------
+ 1221  1        ///  - message object 144 is not valid
+ 1222  1        ///  -----------------------------------------------------------------------
+ 1223  1        ///  Configuration of Message Object 145:
+ 1224  1        ///  -----------------------------------------------------------------------
+ 1225  1        ///  - message object 145 is not valid
+ 1226  1        ///  -----------------------------------------------------------------------
+ 1227  1        ///  Configuration of Message Object 146:
+ 1228  1        ///  -----------------------------------------------------------------------
+ 1229  1        ///  - message object 146 is not valid
+ 1230  1        ///  -----------------------------------------------------------------------
+ 1231  1        ///  Configuration of Message Object 147:
+ 1232  1        ///  -----------------------------------------------------------------------
+ 1233  1        ///  - message object 147 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 21  
+
+ 1234  1        ///  -----------------------------------------------------------------------
+ 1235  1        ///  Configuration of Message Object 148:
+ 1236  1        ///  -----------------------------------------------------------------------
+ 1237  1        ///  - message object 148 is not valid
+ 1238  1        ///  -----------------------------------------------------------------------
+ 1239  1        ///  Configuration of Message Object 149:
+ 1240  1        ///  -----------------------------------------------------------------------
+ 1241  1        ///  - message object 149 is not valid
+ 1242  1        ///  -----------------------------------------------------------------------
+ 1243  1        ///  Configuration of Message Object 150:
+ 1244  1        ///  -----------------------------------------------------------------------
+ 1245  1        ///  - message object 150 is not valid
+ 1246  1        ///  -----------------------------------------------------------------------
+ 1247  1        ///  Configuration of Message Object 151:
+ 1248  1        ///  -----------------------------------------------------------------------
+ 1249  1        ///  - message object 151 is not valid
+ 1250  1        ///  -----------------------------------------------------------------------
+ 1251  1        ///  Configuration of Message Object 152:
+ 1252  1        ///  -----------------------------------------------------------------------
+ 1253  1        ///  - message object 152 is not valid
+ 1254  1        ///  -----------------------------------------------------------------------
+ 1255  1        ///  Configuration of Message Object 153:
+ 1256  1        ///  -----------------------------------------------------------------------
+ 1257  1        ///  - message object 153 is not valid
+ 1258  1        ///  -----------------------------------------------------------------------
+ 1259  1        ///  Configuration of Message Object 154:
+ 1260  1        ///  -----------------------------------------------------------------------
+ 1261  1        ///  - message object 154 is not valid
+ 1262  1        ///  -----------------------------------------------------------------------
+ 1263  1        ///  Configuration of Message Object 155:
+ 1264  1        ///  -----------------------------------------------------------------------
+ 1265  1        ///  - message object 155 is not valid
+ 1266  1        ///  -----------------------------------------------------------------------
+ 1267  1        ///  Configuration of Message Object 156:
+ 1268  1        ///  -----------------------------------------------------------------------
+ 1269  1        ///  - message object 156 is not valid
+ 1270  1        ///  -----------------------------------------------------------------------
+ 1271  1        ///  Configuration of Message Object 157:
+ 1272  1        ///  -----------------------------------------------------------------------
+ 1273  1        ///  - message object 157 is not valid
+ 1274  1        ///  -----------------------------------------------------------------------
+ 1275  1        ///  Configuration of Message Object 158:
+ 1276  1        ///  -----------------------------------------------------------------------
+ 1277  1        ///  - message object 158 is not valid
+ 1278  1        ///  -----------------------------------------------------------------------
+ 1279  1        ///  Configuration of Message Object 159:
+ 1280  1        ///  -----------------------------------------------------------------------
+ 1281  1        ///  - message object 159 is not valid
+ 1282  1        ///  -----------------------------------------------------------------------
+ 1283  1        ///  Configuration of Message Object 160:
+ 1284  1        ///  -----------------------------------------------------------------------
+ 1285  1        ///  - message object 160 is not valid
+ 1286  1        ///  -----------------------------------------------------------------------
+ 1287  1        ///  Configuration of Message Object 161:
+ 1288  1        ///  -----------------------------------------------------------------------
+ 1289  1        ///  - message object 161 is not valid
+ 1290  1        ///  -----------------------------------------------------------------------
+ 1291  1        ///  Configuration of Message Object 162:
+ 1292  1        ///  -----------------------------------------------------------------------
+ 1293  1        ///  - message object 162 is not valid
+ 1294  1        ///  -----------------------------------------------------------------------
+ 1295  1        ///  Configuration of Message Object 163:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 22  
+
+ 1296  1        ///  -----------------------------------------------------------------------
+ 1297  1        ///  - message object 163 is not valid
+ 1298  1        ///  -----------------------------------------------------------------------
+ 1299  1        ///  Configuration of Message Object 164:
+ 1300  1        ///  -----------------------------------------------------------------------
+ 1301  1        ///  - message object 164 is not valid
+ 1302  1        ///  -----------------------------------------------------------------------
+ 1303  1        ///  Configuration of Message Object 165:
+ 1304  1        ///  -----------------------------------------------------------------------
+ 1305  1        ///  - message object 165 is not valid
+ 1306  1        ///  -----------------------------------------------------------------------
+ 1307  1        ///  Configuration of Message Object 166:
+ 1308  1        ///  -----------------------------------------------------------------------
+ 1309  1        ///  - message object 166 is not valid
+ 1310  1        ///  -----------------------------------------------------------------------
+ 1311  1        ///  Configuration of Message Object 167:
+ 1312  1        ///  -----------------------------------------------------------------------
+ 1313  1        ///  - message object 167 is not valid
+ 1314  1        ///  -----------------------------------------------------------------------
+ 1315  1        ///  Configuration of Message Object 168:
+ 1316  1        ///  -----------------------------------------------------------------------
+ 1317  1        ///  - message object 168 is not valid
+ 1318  1        ///  -----------------------------------------------------------------------
+ 1319  1        ///  Configuration of Message Object 169:
+ 1320  1        ///  -----------------------------------------------------------------------
+ 1321  1        ///  - message object 169 is not valid
+ 1322  1        ///  -----------------------------------------------------------------------
+ 1323  1        ///  Configuration of Message Object 170:
+ 1324  1        ///  -----------------------------------------------------------------------
+ 1325  1        ///  - message object 170 is not valid
+ 1326  1        ///  -----------------------------------------------------------------------
+ 1327  1        ///  Configuration of Message Object 171:
+ 1328  1        ///  -----------------------------------------------------------------------
+ 1329  1        ///  - message object 171 is not valid
+ 1330  1        ///  -----------------------------------------------------------------------
+ 1331  1        ///  Configuration of Message Object 172:
+ 1332  1        ///  -----------------------------------------------------------------------
+ 1333  1        ///  - message object 172 is not valid
+ 1334  1        ///  -----------------------------------------------------------------------
+ 1335  1        ///  Configuration of Message Object 173:
+ 1336  1        ///  -----------------------------------------------------------------------
+ 1337  1        ///  - message object 173 is not valid
+ 1338  1        ///  -----------------------------------------------------------------------
+ 1339  1        ///  Configuration of Message Object 174:
+ 1340  1        ///  -----------------------------------------------------------------------
+ 1341  1        ///  - message object 174 is not valid
+ 1342  1        ///  -----------------------------------------------------------------------
+ 1343  1        ///  Configuration of Message Object 175:
+ 1344  1        ///  -----------------------------------------------------------------------
+ 1345  1        ///  - message object 175 is not valid
+ 1346  1        ///  -----------------------------------------------------------------------
+ 1347  1        ///  Configuration of Message Object 176:
+ 1348  1        ///  -----------------------------------------------------------------------
+ 1349  1        ///  - message object 176 is not valid
+ 1350  1        ///  -----------------------------------------------------------------------
+ 1351  1        ///  Configuration of Message Object 177:
+ 1352  1        ///  -----------------------------------------------------------------------
+ 1353  1        ///  - message object 177 is not valid
+ 1354  1        ///  -----------------------------------------------------------------------
+ 1355  1        ///  Configuration of Message Object 178:
+ 1356  1        ///  -----------------------------------------------------------------------
+ 1357  1        ///  - message object 178 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 23  
+
+ 1358  1        ///  -----------------------------------------------------------------------
+ 1359  1        ///  Configuration of Message Object 179:
+ 1360  1        ///  -----------------------------------------------------------------------
+ 1361  1        ///  - message object 179 is not valid
+ 1362  1        ///  -----------------------------------------------------------------------
+ 1363  1        ///  Configuration of Message Object 180:
+ 1364  1        ///  -----------------------------------------------------------------------
+ 1365  1        ///  - message object 180 is not valid
+ 1366  1        ///  -----------------------------------------------------------------------
+ 1367  1        ///  Configuration of Message Object 181:
+ 1368  1        ///  -----------------------------------------------------------------------
+ 1369  1        ///  - message object 181 is not valid
+ 1370  1        ///  -----------------------------------------------------------------------
+ 1371  1        ///  Configuration of Message Object 182:
+ 1372  1        ///  -----------------------------------------------------------------------
+ 1373  1        ///  - message object 182 is not valid
+ 1374  1        ///  -----------------------------------------------------------------------
+ 1375  1        ///  Configuration of Message Object 183:
+ 1376  1        ///  -----------------------------------------------------------------------
+ 1377  1        ///  - message object 183 is not valid
+ 1378  1        ///  -----------------------------------------------------------------------
+ 1379  1        ///  Configuration of Message Object 184:
+ 1380  1        ///  -----------------------------------------------------------------------
+ 1381  1        ///  - message object 184 is not valid
+ 1382  1        ///  -----------------------------------------------------------------------
+ 1383  1        ///  Configuration of Message Object 185:
+ 1384  1        ///  -----------------------------------------------------------------------
+ 1385  1        ///  - message object 185 is not valid
+ 1386  1        ///  -----------------------------------------------------------------------
+ 1387  1        ///  Configuration of Message Object 186:
+ 1388  1        ///  -----------------------------------------------------------------------
+ 1389  1        ///  - message object 186 is not valid
+ 1390  1        ///  -----------------------------------------------------------------------
+ 1391  1        ///  Configuration of Message Object 187:
+ 1392  1        ///  -----------------------------------------------------------------------
+ 1393  1        ///  - message object 187 is not valid
+ 1394  1        ///  -----------------------------------------------------------------------
+ 1395  1        ///  Configuration of Message Object 188:
+ 1396  1        ///  -----------------------------------------------------------------------
+ 1397  1        ///  - message object 188 is not valid
+ 1398  1        ///  -----------------------------------------------------------------------
+ 1399  1        ///  Configuration of Message Object 189:
+ 1400  1        ///  -----------------------------------------------------------------------
+ 1401  1        ///  - message object 189 is not valid
+ 1402  1        ///  -----------------------------------------------------------------------
+ 1403  1        ///  Configuration of Message Object 190:
+ 1404  1        ///  -----------------------------------------------------------------------
+ 1405  1        ///  - message object 190 is not valid
+ 1406  1        ///  -----------------------------------------------------------------------
+ 1407  1        ///  Configuration of Message Object 191:
+ 1408  1        ///  -----------------------------------------------------------------------
+ 1409  1        ///  - message object 191 is not valid
+ 1410  1        ///  -----------------------------------------------------------------------
+ 1411  1        ///  Configuration of Message Object 192:
+ 1412  1        ///  -----------------------------------------------------------------------
+ 1413  1        ///  - message object 192 is not valid
+ 1414  1        ///  -----------------------------------------------------------------------
+ 1415  1        ///  Configuration of Message Object 193:
+ 1416  1        ///  -----------------------------------------------------------------------
+ 1417  1        ///  - message object 193 is not valid
+ 1418  1        ///  -----------------------------------------------------------------------
+ 1419  1        ///  Configuration of Message Object 194:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 24  
+
+ 1420  1        ///  -----------------------------------------------------------------------
+ 1421  1        ///  - message object 194 is not valid
+ 1422  1        ///  -----------------------------------------------------------------------
+ 1423  1        ///  Configuration of Message Object 195:
+ 1424  1        ///  -----------------------------------------------------------------------
+ 1425  1        ///  - message object 195 is not valid
+ 1426  1        ///  -----------------------------------------------------------------------
+ 1427  1        ///  Configuration of Message Object 196:
+ 1428  1        ///  -----------------------------------------------------------------------
+ 1429  1        ///  - message object 196 is not valid
+ 1430  1        ///  -----------------------------------------------------------------------
+ 1431  1        ///  Configuration of Message Object 197:
+ 1432  1        ///  -----------------------------------------------------------------------
+ 1433  1        ///  - message object 197 is not valid
+ 1434  1        ///  -----------------------------------------------------------------------
+ 1435  1        ///  Configuration of Message Object 198:
+ 1436  1        ///  -----------------------------------------------------------------------
+ 1437  1        ///  - message object 198 is not valid
+ 1438  1        ///  -----------------------------------------------------------------------
+ 1439  1        ///  Configuration of Message Object 199:
+ 1440  1        ///  -----------------------------------------------------------------------
+ 1441  1        ///  - message object 199 is not valid
+ 1442  1        ///  -----------------------------------------------------------------------
+ 1443  1        ///  Configuration of Message Object 200:
+ 1444  1        ///  -----------------------------------------------------------------------
+ 1445  1        ///  - message object 200 is not valid
+ 1446  1        ///  -----------------------------------------------------------------------
+ 1447  1        ///  Configuration of Message Object 201:
+ 1448  1        ///  -----------------------------------------------------------------------
+ 1449  1        ///  - message object 201 is not valid
+ 1450  1        ///  -----------------------------------------------------------------------
+ 1451  1        ///  Configuration of Message Object 202:
+ 1452  1        ///  -----------------------------------------------------------------------
+ 1453  1        ///  - message object 202 is not valid
+ 1454  1        ///  -----------------------------------------------------------------------
+ 1455  1        ///  Configuration of Message Object 203:
+ 1456  1        ///  -----------------------------------------------------------------------
+ 1457  1        ///  - message object 203 is not valid
+ 1458  1        ///  -----------------------------------------------------------------------
+ 1459  1        ///  Configuration of Message Object 204:
+ 1460  1        ///  -----------------------------------------------------------------------
+ 1461  1        ///  - message object 204 is not valid
+ 1462  1        ///  -----------------------------------------------------------------------
+ 1463  1        ///  Configuration of Message Object 205:
+ 1464  1        ///  -----------------------------------------------------------------------
+ 1465  1        ///  - message object 205 is not valid
+ 1466  1        ///  -----------------------------------------------------------------------
+ 1467  1        ///  Configuration of Message Object 206:
+ 1468  1        ///  -----------------------------------------------------------------------
+ 1469  1        ///  - message object 206 is not valid
+ 1470  1        ///  -----------------------------------------------------------------------
+ 1471  1        ///  Configuration of Message Object 207:
+ 1472  1        ///  -----------------------------------------------------------------------
+ 1473  1        ///  - message object 207 is not valid
+ 1474  1        ///  -----------------------------------------------------------------------
+ 1475  1        ///  Configuration of Message Object 208:
+ 1476  1        ///  -----------------------------------------------------------------------
+ 1477  1        ///  - message object 208 is not valid
+ 1478  1        ///  -----------------------------------------------------------------------
+ 1479  1        ///  Configuration of Message Object 209:
+ 1480  1        ///  -----------------------------------------------------------------------
+ 1481  1        ///  - message object 209 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 25  
+
+ 1482  1        ///  -----------------------------------------------------------------------
+ 1483  1        ///  Configuration of Message Object 210:
+ 1484  1        ///  -----------------------------------------------------------------------
+ 1485  1        ///  - message object 210 is not valid
+ 1486  1        ///  -----------------------------------------------------------------------
+ 1487  1        ///  Configuration of Message Object 211:
+ 1488  1        ///  -----------------------------------------------------------------------
+ 1489  1        ///  - message object 211 is not valid
+ 1490  1        ///  -----------------------------------------------------------------------
+ 1491  1        ///  Configuration of Message Object 212:
+ 1492  1        ///  -----------------------------------------------------------------------
+ 1493  1        ///  - message object 212 is not valid
+ 1494  1        ///  -----------------------------------------------------------------------
+ 1495  1        ///  Configuration of Message Object 213:
+ 1496  1        ///  -----------------------------------------------------------------------
+ 1497  1        ///  - message object 213 is not valid
+ 1498  1        ///  -----------------------------------------------------------------------
+ 1499  1        ///  Configuration of Message Object 214:
+ 1500  1        ///  -----------------------------------------------------------------------
+ 1501  1        ///  - message object 214 is not valid
+ 1502  1        ///  -----------------------------------------------------------------------
+ 1503  1        ///  Configuration of Message Object 215:
+ 1504  1        ///  -----------------------------------------------------------------------
+ 1505  1        ///  - message object 215 is not valid
+ 1506  1        ///  -----------------------------------------------------------------------
+ 1507  1        ///  Configuration of Message Object 216:
+ 1508  1        ///  -----------------------------------------------------------------------
+ 1509  1        ///  - message object 216 is not valid
+ 1510  1        ///  -----------------------------------------------------------------------
+ 1511  1        ///  Configuration of Message Object 217:
+ 1512  1        ///  -----------------------------------------------------------------------
+ 1513  1        ///  - message object 217 is not valid
+ 1514  1        ///  -----------------------------------------------------------------------
+ 1515  1        ///  Configuration of Message Object 218:
+ 1516  1        ///  -----------------------------------------------------------------------
+ 1517  1        ///  - message object 218 is not valid
+ 1518  1        ///  -----------------------------------------------------------------------
+ 1519  1        ///  Configuration of Message Object 219:
+ 1520  1        ///  -----------------------------------------------------------------------
+ 1521  1        ///  - message object 219 is not valid
+ 1522  1        ///  -----------------------------------------------------------------------
+ 1523  1        ///  Configuration of Message Object 220:
+ 1524  1        ///  -----------------------------------------------------------------------
+ 1525  1        ///  - message object 220 is not valid
+ 1526  1        ///  -----------------------------------------------------------------------
+ 1527  1        ///  Configuration of Message Object 221:
+ 1528  1        ///  -----------------------------------------------------------------------
+ 1529  1        ///  - message object 221 is not valid
+ 1530  1        ///  -----------------------------------------------------------------------
+ 1531  1        ///  Configuration of Message Object 222:
+ 1532  1        ///  -----------------------------------------------------------------------
+ 1533  1        ///  - message object 222 is not valid
+ 1534  1        ///  -----------------------------------------------------------------------
+ 1535  1        ///  Configuration of Message Object 223:
+ 1536  1        ///  -----------------------------------------------------------------------
+ 1537  1        ///  - message object 223 is not valid
+ 1538  1        ///  -----------------------------------------------------------------------
+ 1539  1        ///  Configuration of Message Object 224:
+ 1540  1        ///  -----------------------------------------------------------------------
+ 1541  1        ///  - message object 224 is not valid
+ 1542  1        ///  -----------------------------------------------------------------------
+ 1543  1        ///  Configuration of Message Object 225:
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 26  
+
+ 1544  1        ///  -----------------------------------------------------------------------
+ 1545  1        ///  - message object 225 is not valid
+ 1546  1        ///  -----------------------------------------------------------------------
+ 1547  1        ///  Configuration of Message Object 226:
+ 1548  1        ///  -----------------------------------------------------------------------
+ 1549  1        ///  - message object 226 is not valid
+ 1550  1        ///  -----------------------------------------------------------------------
+ 1551  1        ///  Configuration of Message Object 227:
+ 1552  1        ///  -----------------------------------------------------------------------
+ 1553  1        ///  - message object 227 is not valid
+ 1554  1        ///  -----------------------------------------------------------------------
+ 1555  1        ///  Configuration of Message Object 228:
+ 1556  1        ///  -----------------------------------------------------------------------
+ 1557  1        ///  - message object 228 is not valid
+ 1558  1        ///  -----------------------------------------------------------------------
+ 1559  1        ///  Configuration of Message Object 229:
+ 1560  1        ///  -----------------------------------------------------------------------
+ 1561  1        ///  - message object 229 is not valid
+ 1562  1        ///  -----------------------------------------------------------------------
+ 1563  1        ///  Configuration of Message Object 230:
+ 1564  1        ///  -----------------------------------------------------------------------
+ 1565  1        ///  - message object 230 is not valid
+ 1566  1        ///  -----------------------------------------------------------------------
+ 1567  1        ///  Configuration of Message Object 231:
+ 1568  1        ///  -----------------------------------------------------------------------
+ 1569  1        ///  - message object 231 is not valid
+ 1570  1        ///  -----------------------------------------------------------------------
+ 1571  1        ///  Configuration of Message Object 232:
+ 1572  1        ///  -----------------------------------------------------------------------
+ 1573  1        ///  - message object 232 is not valid
+ 1574  1        ///  -----------------------------------------------------------------------
+ 1575  1        ///  Configuration of Message Object 233:
+ 1576  1        ///  -----------------------------------------------------------------------
+ 1577  1        ///  - message object 233 is not valid
+ 1578  1        ///  -----------------------------------------------------------------------
+ 1579  1        ///  Configuration of Message Object 234:
+ 1580  1        ///  -----------------------------------------------------------------------
+ 1581  1        ///  - message object 234 is not valid
+ 1582  1        ///  -----------------------------------------------------------------------
+ 1583  1        ///  Configuration of Message Object 235:
+ 1584  1        ///  -----------------------------------------------------------------------
+ 1585  1        ///  - message object 235 is not valid
+ 1586  1        ///  -----------------------------------------------------------------------
+ 1587  1        ///  Configuration of Message Object 236:
+ 1588  1        ///  -----------------------------------------------------------------------
+ 1589  1        ///  - message object 236 is not valid
+ 1590  1        ///  -----------------------------------------------------------------------
+ 1591  1        ///  Configuration of Message Object 237:
+ 1592  1        ///  -----------------------------------------------------------------------
+ 1593  1        ///  - message object 237 is not valid
+ 1594  1        ///  -----------------------------------------------------------------------
+ 1595  1        ///  Configuration of Message Object 238:
+ 1596  1        ///  -----------------------------------------------------------------------
+ 1597  1        ///  - message object 238 is not valid
+ 1598  1        ///  -----------------------------------------------------------------------
+ 1599  1        ///  Configuration of Message Object 239:
+ 1600  1        ///  -----------------------------------------------------------------------
+ 1601  1        ///  - message object 239 is not valid
+ 1602  1        ///  -----------------------------------------------------------------------
+ 1603  1        ///  Configuration of Message Object 240:
+ 1604  1        ///  -----------------------------------------------------------------------
+ 1605  1        ///  - message object 240 is not valid
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 27  
+
+ 1606  1        ///  -----------------------------------------------------------------------
+ 1607  1        ///  Configuration of Message Object 241:
+ 1608  1        ///  -----------------------------------------------------------------------
+ 1609  1        ///  - message object 241 is not valid
+ 1610  1        ///  -----------------------------------------------------------------------
+ 1611  1        ///  Configuration of Message Object 242:
+ 1612  1        ///  -----------------------------------------------------------------------
+ 1613  1        ///  - message object 242 is not valid
+ 1614  1        ///  -----------------------------------------------------------------------
+ 1615  1        ///  Configuration of Message Object 243:
+ 1616  1        ///  -----------------------------------------------------------------------
+ 1617  1        ///  - message object 243 is not valid
+ 1618  1        ///  -----------------------------------------------------------------------
+ 1619  1        ///  Configuration of Message Object 244:
+ 1620  1        ///  -----------------------------------------------------------------------
+ 1621  1        ///  - message object 244 is not valid
+ 1622  1        ///  -----------------------------------------------------------------------
+ 1623  1        ///  Configuration of Message Object 245:
+ 1624  1        ///  -----------------------------------------------------------------------
+ 1625  1        ///  - message object 245 is not valid
+ 1626  1        ///  -----------------------------------------------------------------------
+ 1627  1        ///  Configuration of Message Object 246:
+ 1628  1        ///  -----------------------------------------------------------------------
+ 1629  1        ///  - message object 246 is not valid
+ 1630  1        ///  -----------------------------------------------------------------------
+ 1631  1        ///  Configuration of Message Object 247:
+ 1632  1        ///  -----------------------------------------------------------------------
+ 1633  1        ///  - message object 247 is not valid
+ 1634  1        ///  -----------------------------------------------------------------------
+ 1635  1        ///  Configuration of Message Object 248:
+ 1636  1        ///  -----------------------------------------------------------------------
+ 1637  1        ///  - message object 248 is not valid
+ 1638  1        ///  -----------------------------------------------------------------------
+ 1639  1        ///  Configuration of Message Object 249:
+ 1640  1        ///  -----------------------------------------------------------------------
+ 1641  1        ///  - message object 249 is not valid
+ 1642  1        ///  -----------------------------------------------------------------------
+ 1643  1        ///  Configuration of Message Object 250:
+ 1644  1        ///  -----------------------------------------------------------------------
+ 1645  1        ///  - message object 250 is not valid
+ 1646  1        ///  -----------------------------------------------------------------------
+ 1647  1        ///  Configuration of Message Object 251:
+ 1648  1        ///  -----------------------------------------------------------------------
+ 1649  1        ///  - message object 251 is not valid
+ 1650  1        ///  -----------------------------------------------------------------------
+ 1651  1        ///  Configuration of Message Object 252:
+ 1652  1        ///  -----------------------------------------------------------------------
+ 1653  1        ///  - message object 252 is not valid
+ 1654  1        ///  -----------------------------------------------------------------------
+ 1655  1        ///  Configuration of Message Object 253:
+ 1656  1        ///  -----------------------------------------------------------------------
+ 1657  1        ///  - message object 253 is not valid
+ 1658  1        ///  -----------------------------------------------------------------------
+ 1659  1        ///  Configuration of Message Object 254:
+ 1660  1        ///  -----------------------------------------------------------------------
+ 1661  1        ///  - message object 254 is not valid
+ 1662  1      
+ 1663  1        ///  -----------------------------------------------------------------------
+ 1664  1        ///  Configuration of Service Request Nodes 0 - 15:
+ 1665  1        ///  -----------------------------------------------------------------------
+ 1666  1        ///  SRN0 service request node configuration:
+ 1667  1        ///  - SRN0 interrupt priority level (ILVL) = 13
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 28  
+
+ 1668  1        ///  - SRN0 interrupt group level (GLVL) = 3
+ 1669  1        ///  - SRN0 group priority extension (GPX) = 0
+ 1670  1      
+ 1671  1        CAN_0IC        =  0x0077;     
+ 1672  1      
+ 1673  1      
+ 1674  1        //   -----------------------------------------------------------------------
+ 1675  1        //   Start the CAN Nodes:
+ 1676  1        //   -----------------------------------------------------------------------
+ 1677  1      
+ 1678  1        ///  - ------------- CAN_NCR0 ----------------------------------------------
+ 1679  1      
+ 1680  1          CAN_NCR0 &= ~ (uword) 0x0041; // reset INIT and CCE
+ 1681  1        ///  - ------------- CAN_NCR1 ----------------------------------------------
+ 1682  1      
+ 1683  1          CAN_NCR1 &= ~ (uword) 0x0041; // reset INIT and CCE
+ 1684  1        ///  - ------------- CAN_NCR2 ----------------------------------------------
+ 1685  1      
+ 1686  1          CAN_NCR2 &= ~ (uword) 0x0041; // reset INIT and CCE
+ 1687  1      
+ 1688  1      
+ 1689  1      
+ 1690  1        // USER CODE BEGIN (Init,3)
+ 1691  1      
+ 1692  1        // USER CODE END
+ 1693  1      
+ 1694  1      } //  End of function CAN_vInit
+ 1695         
+ 1696         //****************************************************************************
+ 1697         // @Function      void CAN_vGetMsgObj(ubyte ubObjNr, stCAN_SWObj *pstObj) 
+ 1698         //
+ 1699         //----------------------------------------------------------------------------
+ 1700         // @Description   This function fills the forwarded SW message object with 
+ 1701         //                the content of the chosen HW message object.
+ 1702         //                
+ 1703         //                For Receive Message object use function CAN_vReleaseObj, to 
+ 1704         //                release the message object. 
+ 1705         //                
+ 1706         //                The structure of the SW message object is defined in the 
+ 1707         //                header file CAN.H (see stCAN_SWObj).
+ 1708         //
+ 1709         //----------------------------------------------------------------------------
+ 1710         // @Returnvalue   None
+ 1711         //
+ 1712         //----------------------------------------------------------------------------
+ 1713         // @Parameters    ubObjNr: 
+ 1714         //                Number of the message object to be read (0-254)
+ 1715         // @Parameters    *pstObj: 
+ 1716         //                Pointer on a message object to be filled by this function
+ 1717         //
+ 1718         //----------------------------------------------------------------------------
+ 1719         // @Date          2018/11/1
+ 1720         //
+ 1721         //****************************************************************************
+ 1722         
+ 1723         // USER CODE BEGIN (GetMsgObj,1)
+ 1724         
+ 1725         // USER CODE END
+ 1726         
+ 1727         void CAN_vGetMsgObj(ubyte ubObjNr, stCAN_SWObj *pstObj)
+ 1728         {
+ 1729  1        ubyte i;
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 29  
+
+ 1730  1      
+ 1731  1        //----- get DLC -------------------------------------------------------
+ 1732  1        pstObj->ubMOCfg = (ubyte)((CAN_HWOBJ[ubObjNr].uwMOFCRH & 0x0F00) >> 8); //MOFCRnH[11-8] DLC
+ 1733  1      
+ 1734  1        //----- get MODATA ----------------------------------------------------
+ 1735  1        for(i = 0; i < pstObj->ubMOCfg; i++)
+ 1736  1        {
+ 1737  2          pstObj->ubData[i] = CAN_HWOBJ[ubObjNr].ubData[i];
+ 1738  2        }
+ 1739  1      
+ 1740  1        //----- get DIR -------------------------------------------------------
+ 1741  1          pstObj->ubMOCfg |= (ubyte)((CAN_HWOBJ[ubObjNr].uwMOCTRL & 0x0800) >> 7);  // set DIR if transmit objec
+             -t
+ 1742  1      
+ 1743  1        //----- get Identifier ------------------------------------------------
+ 1744  1        if(CAN_HWOBJ[ubObjNr].uwMOARH & 0x2000)    // if extended identifier
+ 1745  1        {
+ 1746  2          //----- get Extended Identifier -------------------------------------
+ 1747  2          pstObj->ulID = (((ulong)(CAN_HWOBJ[ubObjNr].uwMOARH & 0x1FFF))<<16) + CAN_HWOBJ[ubObjNr].uwMOARL;
+ 1748  2      
+ 1749  2          pstObj->ubMOCfg = pstObj->ubMOCfg | 0x20;  // set IDE
+ 1750  2        }
+ 1751  1        else                                       // standard identifier
+ 1752  1        {
+ 1753  2          //----- get Standard Identifier -------------------------------------
+ 1754  2          pstObj->ulID = (CAN_HWOBJ[ubObjNr].uwMOARH & 0x1FFF) >> 2;
+ 1755  2        }
+ 1756  1      
+ 1757  1        //----- get Acceptance Mask -----------------------------------------
+ 1758  1        if(((CAN_HWOBJ[ubObjNr].uwMOARH & 0x2000) == 0) && (CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x2000))    // if IDE 
+             -= 0 & MIDE = 1
+ 1759  1        {
+ 1760  2          pstObj->ulMask = (CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x1FFF) >> 2;
+ 1761  2        }
+ 1762  1        else
+ 1763  1        {
+ 1764  2          pstObj->ulMask = (((ulong)(CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x1FFF))<<16) + CAN_HWOBJ[ubObjNr].uwMOAMRL;
+ 1765  2        }
+ 1766  1      
+ 1767  1        //----- get Acceptance Mask bit ---------------------------------------
+ 1768  1        pstObj->ubMOCfg |= (ubyte)((CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x2000) >> 7); // set MIDE
+ 1769  1      
+ 1770  1        //----- get Frame Counter Value ---------------------------------------
+ 1771  1        pstObj->uwCounter = CAN_HWOBJ[ubObjNr].uwMOIPRH;
+ 1772  1      
+ 1773  1      } //  End of function CAN_vGetMsgObj
+ 1774         
+ 1775         //****************************************************************************
+ 1776         // @Function      void CAN_vTransmit(ubyte ubObjNr) 
+ 1777         //
+ 1778         //----------------------------------------------------------------------------
+ 1779         // @Description   This function triggers the CAN controller to send the 
+ 1780         //                selected message.
+ 1781         //                If the selected message object is a TRANSMIT OBJECT then 
+ 1782         //                this function triggers the sending of a data frame. If 
+ 1783         //                however the selected message object is a RECEIVE OBJECT 
+ 1784         //                this function triggers the sending of a remote frame.
+ 1785         //
+ 1786         //----------------------------------------------------------------------------
+ 1787         // @Returnvalue   None
+ 1788         //
+ 1789         //----------------------------------------------------------------------------
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 30  
+
+ 1790         // @Parameters    ubObjNr: 
+ 1791         //                Number of the message object (0-254)
+ 1792         //
+ 1793         //----------------------------------------------------------------------------
+ 1794         // @Date          2018/11/1
+ 1795         //
+ 1796         //****************************************************************************
+ 1797         
+ 1798         // USER CODE BEGIN (Transmit,1)
+ 1799         
+ 1800         // USER CODE END
+ 1801         
+ 1802         void CAN_vTransmit(ubyte ubObjNr)
+ 1803         {
+ 1804  1      
+ 1805  1        CAN_HWOBJ[ubObjNr].uwMOCTRH = 0x0720;  // set TXRQ,TXEN0,TXEN1,MSGVAL
+ 1806  1      
+ 1807  1      } //  End of function CAN_vTransmit
+ 1808         
+ 1809         //****************************************************************************
+ 1810         // @Function      void CAN_vLoadData(ubyte ubObjNr, ubyte *ubpubData) 
+ 1811         //
+ 1812         //----------------------------------------------------------------------------
+ 1813         // @Description   If a hardware TRANSMIT OBJECT has to be loaded with data 
+ 1814         //                but not with a new identifier, this function may be used 
+ 1815         //                instead of the function CAN_vConfigMsgObj. The message 
+ 1816         //                object should be accessed by calling the function 
+ 1817         //                CAN_ubRequestMsgObj before calling this function. This 
+ 1818         //                prevents the CAN controller from working with invalid data.
+ 1819         //
+ 1820         //----------------------------------------------------------------------------
+ 1821         // @Returnvalue   None
+ 1822         //
+ 1823         //----------------------------------------------------------------------------
+ 1824         // @Parameters    ubObjNr: 
+ 1825         //                Number of the message object to be configured (0-254)
+ 1826         // @Parameters    *ubpubData: 
+ 1827         //                Pointer on a data buffer
+ 1828         //
+ 1829         //----------------------------------------------------------------------------
+ 1830         // @Date          2018/11/1
+ 1831         //
+ 1832         //****************************************************************************
+ 1833         
+ 1834         // USER CODE BEGIN (LoadData,1)
+ 1835         
+ 1836         // USER CODE END
+ 1837         
+ 1838         void CAN_vLoadData(ubyte ubObjNr, ubyte *ubpubData)
+ 1839         {
+ 1840  1        ubyte i;
+ 1841  1      
+ 1842  1        CAN_HWOBJ[ubObjNr].uwMOCTRH = 0x0008;       // set NEWDAT
+ 1843  1      
+ 1844  1        for(i = 0; i < (CAN_HWOBJ[ubObjNr].uwMOFCRH & 0x0F00) >> 8; i++)
+ 1845  1        {
+ 1846  2          CAN_HWOBJ[ubObjNr].ubData[i] = *(ubpubData++); //load MODATA
+ 1847  2        }
+ 1848  1      
+ 1849  1        CAN_HWOBJ[ubObjNr].uwMOCTRH = 0x0020;       // set MSGVAL
+ 1850  1        CAN_HWOBJ[ubObjNr].uwMOCTRL = 0x0040;       // reset RTSEL
+ 1851  1      
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 31  
+
+ 1852  1      } //  End of function CAN_vLoadData
+ 1853         
+ 1854         
+ 1855         
+ 1856         //****************************************************************************
+ 1857         // @Macro         CAN_viSRN0() 
+ 1858         //
+ 1859         //----------------------------------------------------------------------------
+ 1860         // @Description   
+ 1861         //
+ 1862         //----------------------------------------------------------------------------
+ 1863         // @Returnvalue   
+ 1864         //
+ 1865         //----------------------------------------------------------------------------
+ 1866         // @Parameters    None
+ 1867         //
+ 1868         //----------------------------------------------------------------------------
+ 1869         // @Date          2018/11/1
+ 1870         //
+ 1871         //****************************************************************************
+ 1872         
+ 1873         // USER CODE BEGIN (SRN0,1)
+ 1874         //    ¶¯Á¦µç³Ø ×ÜµçÑ¹      ×ÜµçÁ÷       SOC     ×î¸ßÎÂ¶È  ×îµÍÎÂ¶È
+ 1875         unsigned int BatVoltage=0,BatCurrent=0,BatSoc=0,MaxTemp=0,MinTemp=0;
+ 1876         unsigned int RotateSpeed=0,mcFlag=0,motorTemp=0,mcuTemp=0;
+ 1877         
+ 1878         ubyte can2_recieve[8]={0}; //VCU½ÓÊÕµç»ú¿ØÖÆÆ÷·¢ËÍµ±Ç°×ªËÙ,µç¿Ø×´Ì¬±êÖ¾
+ 1879         ubyte can3_recieve[8]={0}; //VCU½ÓÊÕBMS·¢ËÍµÄµçÑ¹¡¢µçÁ÷¡¢SOC
+ 1880         ubyte can4_recieve[8]={0}; //VCU½ÓÊÕBMS·¢ËÍµÄ×î¸ßÎÂ¶È
+ 1881         ubyte can5_recieve[8]={0}; //VCU½ÓÊÕµç»ú¿ØÖÆÆ÷·¢ËÍµç¿ØÎÂ¶È¼°µç»úÎÂ¶È
+ 1882         // USER CODE END
+ 1883         
+ 1884         void CAN_viSRN0(void) interrupt CAN_SRN0INT
+ 1885         {
+ 1886  1      
+ 1887  1        uword uwSRN0ObjHandler;
+ 1888  1      
+ 1889  1        // USER CODE BEGIN (SRN0,2)
+ 1890  1         ubyte  i=0;
+ 1891  1        // USER CODE END
+ 1892  1      
+ 1893  1        CAN_MSIMASKH = 0x0000;          // set message index mask register
+ 1894  1        CAN_MSIMASKL = 0x003C;
+ 1895  1      
+ 1896  1        while (CAN_MSID0 != 0x0020)
+ 1897  1        {
+ 1898  2          switch(CAN_MSID0){
+ 1899  3      
+ 1900  3          case 2: // message object 2 interrupt 
+ 1901  3          
+ 1902  3            uwSRN0ObjHandler = CAN_HWOBJ[2].uwMOCTRL;
+ 1903  3      
+ 1904  3            if(uwSRN0ObjHandler & MOSTAT_RXPND)          // if message object 2 receive interrupt
+ 1905  3            {
+ 1906  4                  // USER CODE BEGIN (SRN0_OBJ2,1)
+ 1907  4      
+ 1908  4                  // USER CODE END
+ 1909  4      
+ 1910  4              if(uwSRN0ObjHandler & MOSTAT_NEWDAT)       // if NEWDAT is set
+ 1911  4              {
+ 1912  5                  // USER CODE BEGIN (SRN0_OBJ2,2)
+ 1913  5                               for(i = 0; i < 8; i++)
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 32  
+
+ 1914  5                                              can2_recieve[i] = CAN_HWOBJ[2].ubData[i];          //can2_recieve[8]; //VCU½ÓÊÕµç»ú¿ØÖÆÆ÷·¢ËÍµ±Ç°×ªËÙ
+ 1915  5                               RotateSpeed =((can2_recieve[1]*256+can2_recieve[0])/2)-10000;
+ 1916  5                               mcFlag=can2_recieve[5];
+ 1917  5                               can2WatchDog=0;
+ 1918  5                  // USER CODE END
+ 1919  5      
+ 1920  5                if (uwSRN0ObjHandler & MOSTAT_MSGLST)    // if MSGLST is set
+ 1921  5                {
+ 1922  6                  // Indicates that the CAN controller has stored a new 
+ 1923  6                  // message into this object, while NEWDAT was still set,
+ 1924  6                  // ie. the previously stored message is lost.
+ 1925  6      
+ 1926  6                  // USER CODE BEGIN (SRN0_OBJ2,3)
+ 1927  6      
+ 1928  6                  // USER CODE END
+ 1929  6      
+ 1930  6                }
+ 1931  5                else
+ 1932  5                {
+ 1933  6                  // The CAN controller has stored a new message into this object.
+ 1934  6      
+ 1935  6                  // USER CODE BEGIN (SRN0_OBJ2,4)
+ 1936  6      
+ 1937  6                  // USER CODE END
+ 1938  6                }
+ 1939  5      
+ 1940  5              }
+ 1941  4      
+ 1942  4              CAN_HWOBJ[2].uwMOCTRL = MOSTAT_RST_MNR;            // reset MSGLST + NEWDAT + RXPND
+ 1943  4      
+ 1944  4            }  // End of RXPND2
+ 1945  3      
+ 1946  3      
+ 1947  3            CAN_MSPND0H = ~(uword) 0x0000; // reset PND bit
+ 1948  3            CAN_MSPND0L = ~(uword) 0x0004;
+ 1949  3      
+ 1950  3            // USER CODE BEGIN (SRN0_OBJ2,7)
+ 1951  3      
+ 1952  3            // USER CODE END
+ 1953  3      
+ 1954  3            break;
+ 1955  3      
+ 1956  3      
+ 1957  3          case 3: // message object 3 interrupt 
+ 1958  3          
+ 1959  3            uwSRN0ObjHandler = CAN_HWOBJ[3].uwMOCTRL;
+ 1960  3      
+ 1961  3            if(uwSRN0ObjHandler & MOSTAT_RXPND)          // if message object 3 receive interrupt
+ 1962  3            {
+ 1963  4                  // USER CODE BEGIN (SRN0_OBJ3,1)
+ 1964  4      
+ 1965  4                  // USER CODE END
+ 1966  4      
+ 1967  4              if(uwSRN0ObjHandler & MOSTAT_NEWDAT)       // if NEWDAT is set
+ 1968  4              {
+ 1969  5                  // USER CODE BEGIN (SRN0_OBJ3,2)
+ 1970  5                               for(i = 0; i < 8; i++)
+ 1971  5                              can3_recieve[i] = CAN_HWOBJ[3].ubData[i];       //can3_recieve[8]; //VCU½ÓÊÕBMS·¢ËÍµÄµçÑ¹¡¢µçÁ÷¡¢SOC
+ 1972  5                              BatVoltage =can3_recieve[0]*256+can3_recieve[1];
+ 1973  5                              BatCurrent =can3_recieve[2]*256+can3_recieve[3];
+ 1974  5                              BatSoc= can3_recieve[4];
+ 1975  5                              can1WatchDog=0;
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 33  
+
+ 1976  5                  // USER CODE END
+ 1977  5      
+ 1978  5                if (uwSRN0ObjHandler & MOSTAT_MSGLST)    // if MSGLST is set
+ 1979  5                {
+ 1980  6                  // Indicates that the CAN controller has stored a new 
+ 1981  6                  // message into this object, while NEWDAT was still set,
+ 1982  6                  // ie. the previously stored message is lost.
+ 1983  6      
+ 1984  6                  // USER CODE BEGIN (SRN0_OBJ3,3)
+ 1985  6      
+ 1986  6                  // USER CODE END
+ 1987  6      
+ 1988  6                }
+ 1989  5                else
+ 1990  5                {
+ 1991  6                  // The CAN controller has stored a new message into this object.
+ 1992  6      
+ 1993  6                  // USER CODE BEGIN (SRN0_OBJ3,4)
+ 1994  6      
+ 1995  6                  // USER CODE END
+ 1996  6                }
+ 1997  5      
+ 1998  5              }
+ 1999  4      
+ 2000  4              CAN_HWOBJ[3].uwMOCTRL = MOSTAT_RST_MNR;            // reset MSGLST + NEWDAT + RXPND
+ 2001  4      
+ 2002  4            }  // End of RXPND3
+ 2003  3      
+ 2004  3      
+ 2005  3            CAN_MSPND0H = ~(uword) 0x0000; // reset PND bit
+ 2006  3            CAN_MSPND0L = ~(uword) 0x0008;
+ 2007  3      
+ 2008  3            // USER CODE BEGIN (SRN0_OBJ3,7)
+ 2009  3      
+ 2010  3            // USER CODE END
+ 2011  3      
+ 2012  3            break;
+ 2013  3      
+ 2014  3      
+ 2015  3          case 4: // message object 4 interrupt 
+ 2016  3          
+ 2017  3            uwSRN0ObjHandler = CAN_HWOBJ[4].uwMOCTRL;
+ 2018  3      
+ 2019  3            if(uwSRN0ObjHandler & MOSTAT_RXPND)          // if message object 4 receive interrupt
+ 2020  3            {
+ 2021  4                  // USER CODE BEGIN (SRN0_OBJ4,1)
+ 2022  4      
+ 2023  4                  // USER CODE END
+ 2024  4      
+ 2025  4              if(uwSRN0ObjHandler & MOSTAT_NEWDAT)       // if NEWDAT is set
+ 2026  4              {
+ 2027  5                  // USER CODE BEGIN (SRN0_OBJ4,2)
+ 2028  5                              for(i = 0; i < 8; i++)
+ 2029  5                              can4_recieve[i] = CAN_HWOBJ[4].ubData[i];       //can4_recieve          // can4_recieve[8]; //VCU½ÓÊÕBMS·¢ËÍµÄ×î¸ßÎÂ¶
+             -È
+ 2030  5                              MaxTemp= can4_recieve[0];
+ 2031  5                              MinTemp= can4_recieve[1];
+ 2032  5                              can1WatchDog=0;
+ 2033  5                  // USER CODE END
+ 2034  5      
+ 2035  5                if (uwSRN0ObjHandler & MOSTAT_MSGLST)    // if MSGLST is set
+ 2036  5                {
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 34  
+
+ 2037  6                  // Indicates that the CAN controller has stored a new 
+ 2038  6                  // message into this object, while NEWDAT was still set,
+ 2039  6                  // ie. the previously stored message is lost.
+ 2040  6      
+ 2041  6                  // USER CODE BEGIN (SRN0_OBJ4,3)
+ 2042  6      
+ 2043  6                  // USER CODE END
+ 2044  6      
+ 2045  6                }
+ 2046  5                else
+ 2047  5                {
+ 2048  6                  // The CAN controller has stored a new message into this object.
+ 2049  6      
+ 2050  6                  // USER CODE BEGIN (SRN0_OBJ4,4)
+ 2051  6      
+ 2052  6                  // USER CODE END
+ 2053  6                }
+ 2054  5      
+ 2055  5              }
+ 2056  4      
+ 2057  4              CAN_HWOBJ[4].uwMOCTRL = MOSTAT_RST_MNR;            // reset MSGLST + NEWDAT + RXPND
+ 2058  4      
+ 2059  4            }  // End of RXPND4
+ 2060  3      
+ 2061  3      
+ 2062  3            CAN_MSPND0H = ~(uword) 0x0000; // reset PND bit
+ 2063  3            CAN_MSPND0L = ~(uword) 0x0010;
+ 2064  3      
+ 2065  3            // USER CODE BEGIN (SRN0_OBJ4,7)
+ 2066  3      
+ 2067  3            // USER CODE END
+ 2068  3      
+ 2069  3            break;
+ 2070  3      
+ 2071  3      
+ 2072  3          case 5: // message object 5 interrupt 
+ 2073  3          
+ 2074  3            uwSRN0ObjHandler = CAN_HWOBJ[5].uwMOCTRL;
+ 2075  3      
+ 2076  3            if(uwSRN0ObjHandler & MOSTAT_RXPND)          // if message object 5 receive interrupt
+ 2077  3            {
+ 2078  4                  // USER CODE BEGIN (SRN0_OBJ5,1)
+ 2079  4      
+ 2080  4                  // USER CODE END
+ 2081  4      
+ 2082  4              if(uwSRN0ObjHandler & MOSTAT_NEWDAT)       // if NEWDAT is set            //VCU½ÓÊÕµç»ú¼°µç¿ØÎÂ¶È
+ 2083  4              {
+ 2084  5                  // USER CODE BEGIN (SRN0_OBJ5,2)
+ 2085  5                                for(i = 0; i < 8; i++)
+ 2086  5                                              can5_recieve[i] = CAN_HWOBJ[5].ubData[i];          
+ 2087  5                               mcuTemp=can5_recieve[0]-50;
+ 2088  5                               motorTemp =can5_recieve[1]-50;
+ 2089  5                               can2WatchDog=0;
+ 2090  5                  // USER CODE END
+ 2091  5      
+ 2092  5                if (uwSRN0ObjHandler & MOSTAT_MSGLST)    // if MSGLST is set
+ 2093  5                {
+ 2094  6                  // Indicates that the CAN controller has stored a new 
+ 2095  6                  // message into this object, while NEWDAT was still set,
+ 2096  6                  // ie. the previously stored message is lost.
+ 2097  6      
+ 2098  6                  // USER CODE BEGIN (SRN0_OBJ5,3)
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 35  
+
+ 2099  6      
+ 2100  6                  // USER CODE END
+ 2101  6      
+ 2102  6                }
+ 2103  5                else
+ 2104  5                {
+ 2105  6                  // The CAN controller has stored a new message into this object.
+ 2106  6      
+ 2107  6                  // USER CODE BEGIN (SRN0_OBJ5,4)
+ 2108  6      
+ 2109  6                  // USER CODE END
+ 2110  6                }
+ 2111  5      
+ 2112  5              }
+ 2113  4      
+ 2114  4              CAN_HWOBJ[5].uwMOCTRL = MOSTAT_RST_MNR;            // reset MSGLST + NEWDAT + RXPND
+ 2115  4      
+ 2116  4            }  // End of RXPND5
+ 2117  3      
+ 2118  3      
+ 2119  3            CAN_MSPND0H = ~(uword) 0x0000; // reset PND bit
+ 2120  3            CAN_MSPND0L = ~(uword) 0x0020;
+ 2121  3      
+ 2122  3            // USER CODE BEGIN (SRN0_OBJ5,7)
+ 2123  3      
+ 2124  3            // USER CODE END
+ 2125  3      
+ 2126  3            break;
+ 2127  3      
+ 2128  3          default:
+ 2129  3      
+ 2130  3            // USER CODE BEGIN (SRN0,3)
+ 2131  3      
+ 2132  3            // USER CODE END
+ 2133  3      
+ 2134  3            break;
+ 2135  3      
+ 2136  3          }  // end switch 
+ 2137  2      
+ 2138  2          // USER CODE BEGIN (SRN0,7)
+ 2139  2      
+ 2140  2          // USER CODE END
+ 2141  2      
+ 2142  2        }  // end of while CAN_MSID
+ 2143  1      
+ 2144  1      
+ 2145  1        // USER CODE BEGIN (SRN0,15)
+ 2146  1      
+ 2147  1        // USER CODE END
+ 2148  1      
+ 2149  1      } //  End of function CAN_viSRN0
+ 2150         
+ 2151         
+ 2152         
+ 2153         // USER CODE BEGIN (CAN_General,10)
+ 2154         
+ 2155         // USER CODE END
+ 2156         
+
+
+MODULE INFORMATION:   INITIALIZED  UNINITIALIZED
+  CODE SIZE        =        2362     --------
+C166 COMPILER V7.00, CAN                                                                   03/15/2019 15:27:41 PAGE 36  
+
+  NEAR-CONST SIZE  =    --------     --------
+  FAR-CONST SIZE   =    --------     --------
+  HUGE-CONST SIZE  =    --------     --------
+  XHUGE-CONST SIZE =    --------     --------
+  NEAR-DATA SIZE   =          50     --------
+  FAR-DATA SIZE    =    --------     --------
+  XHUGE-DATA SIZE  =    --------     --------
+  IDATA-DATA SIZE  =    --------     --------
+  SDATA-DATA SIZE  =    --------     --------
+  BDATA-DATA SIZE  =    --------     --------
+  HUGE-DATA SIZE   =    --------     --------
+  BIT SIZE         =    --------     --------
+  INIT'L SIZE      =         102     --------
+END OF MODULE INFORMATION.
+
+
+C166 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

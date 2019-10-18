@@ -1,0 +1,173 @@
+C166 COMPILER V7.00, GETDEALDATA                                                           03/15/2019 15:27:41 PAGE 1   
+
+
+C166 COMPILER V7.00, COMPILATION OF MODULE GETDEALDATA
+OBJECT MODULE PLACED IN GetDealData.OBJ
+COMPILER INVOKED BY: F:\Softeware\Fury\Keil\C166\BIN\C166.EXE GetDealData.C MODV2 BROWSE MODV2 DEBUG
+
+ stmt lvl     source
+
+    1         #include "MAIN.H"
+    2         #include "math.h"
+    3         /*************************************全局变量声明************************************/
+    4         
+    5         /*************************************油门变量声明************************************/
+    6         int ac_ad_max[2] = { 145, 142 },ac_ad_min[2] = { 35, 25 };//最值   [0]为油门1；[1]为油门2  23, 35
+    7         int ac_w[10] =  { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };     //油门1加权  
+    8         int ac_ad[2]={0,0};//两路油门的AD值
+    9         int ac_normolize[2] = {0};//油门数据归一化值
+   10         unsigned int ac_data=0;//两油门整合后数据
+   11         int ac_final=0;//油门曲线调整后
+   12         ubyte acRealiableFlag=0,acUnRealiableCout=0; //油门数据可靠标志
+   13         
+   14         /*************************************刹车变量声明************************************/
+   15         
+   16         int br_ad=0,br_ad1=0,br_ad_max=540,br_ad_min=50,brAdFinal=0;  //  br_ad_min=    33
+   17         
+   18         
+   19           //刹车的AD值   最大值   最小值     最终值
+   20         void acDeal()
+   21         {
+   22  1              get_ac_AD();
+   23  1              DataDeal(ac_data);
+   24  1      //      ac_final=acChangeLimit(ac_final);
+   25  1      }
+   26         
+   27         void get_ac_AD()
+   28          {
+   29  1              int ac_temp_ad[4]={0,0,0,0};
+   30  1              int i=0;
+   31  1      
+   32  1              ADC1_vStartSeq0ReqChNum(0,0,0,2);
+   33  1              while(!(ADC1_RCR2 & 0x1000));                   //AI2，5V对应0x03FF。油门左采集          
+   34  1              ac_temp_ad[0]=((ADC1_RESR2>>2)&0x0300)>>8;          //high 2bit
+   35  1              ac_temp_ad[1]=((ADC1_RESR2>>2)&0x00ff);         //low  8bit
+   36  1              ac_ad[0] = ac_temp_ad[0] * 256 + ac_temp_ad[1];
+   37  1              delay(500);     
+   38  1      
+   39  1              ADC1_vStartSeq0ReqChNum(0,0,0,4);
+   40  1              while(!(ADC1_RCR4 & 0x1000));           //AI3，5V对应0x03FF。
+   41  1              ac_temp_ad[2]=((ADC1_RESR4>>2)&0x0300)>>8;              //high 2bit       
+   42  1              ac_temp_ad[3]=((ADC1_RESR4>>2)&0x00ff);                 //low  8bit
+   43  1              ac_ad[1]=ac_temp_ad[2]*256+ac_temp_ad[3];
+   44  1              delay(500);
+   45  1      
+   46  1              
+   47  1              //油门数据归一化处理 0~100
+   48  1      
+   49  1              for (i = 0; i < 2; i++)
+   50  1              {
+   51  2                      ac_ad[i]=ac_ad[i]>ac_ad_max[i] ? ac_ad_max[i] : ac_ad[i];//实际数据限幅
+   52  2                      ac_ad[i] = ac_ad[i]<ac_ad_min[i] ? ac_ad_min[i] : ac_ad[i];
+   53  2                      ac_normolize[i] =(int)(100* (1.0*(ac_ad[i]-ac_ad_min[i]) / (ac_ad_max[i] - ac_ad_min[i])));
+   54  2              }
+   55  1      
+C166 COMPILER V7.00, GETDEALDATA                                                           03/15/2019 15:27:41 PAGE 2   
+
+   56  1              //油门数据整合
+   57  1               ac_data= (ac_normolize[0]+ac_normolize[1])/2;
+   58  1               //判断两路油门数据是否可靠
+   59  1               if(ac_normolize[0]-ac_normolize[1]>10||ac_normolize[1]-ac_normolize[0]>10){
+   60  2                      acUnRealiableCout++;
+   61  2                      if(acUnRealiableCout>20){//不可靠超过100ms，则切除动力
+   62  3                              acRealiableFlag=0; 
+   63  3                              acUnRealiableCout=0;
+   64  3                      }
+   65  2              }
+   66  1               else   acRealiableFlag=1;
+   67  1      
+   68  1       }
+   69         //void get_MostValue() //获取刹车和油门最值
+   70         //{
+   71         //      int i=0;
+   72         //      for (i = 0; i < 2; i++)
+   73         //      {
+   74         //              ac_br_max[i] = AD[i]> ac_br_max[i] ? AD[i] : ac_br_max[i];
+   75         //              ac_br_min[i] = AD[i]< ac_br_min[i] ? AD[i] : ac_br_min[i];
+   76         //      }
+   77         //}
+   78         
+   79         
+   80         /*******************************************************************************************/
+   81         /*************************************油门曲线调整*************************************/
+   82         /*******************************************************************************************/
+   83         int ac_old1=0,ac_old2=0,ac_old3=0,ac_old4=0;
+   84         void DataDeal(int acData)//油门曲线调整
+   85         {
+   86  1              int ac_base= 10;//变权基值
+   87  1              int ac_section = 0;//用于判断当前油门处于哪个区间
+   88  1              int     ac_old= 0;//曲率改变前
+   89  1              int ac_now= 0; //曲率改变后
+   90  1              int i=0;
+   91  1      
+   92  1              ac_old = acData;                   
+   93  1      
+   94  1              ac_section = (int)(ac_old / ac_base);
+   95  1              ac_now = 0;
+   96  1              for (i = 0; i<ac_section; i++)//整数区间
+   97  1                      {
+   98  2                              ac_now += ac_w[i];
+   99  2                      }
+  100  1              if (ac_old - ac_base * ac_section>0)//整数区间以外
+  101  1                              ac_now+= ROUND(1.0*ac_w[ac_section] * (ac_old % ac_base) / ac_base);
+  102  1              ac_now=ac_now > 100 ? 100 : ac_now;
+  103  1              ac_final=ac_now;
+  104  1      
+  105  1          ac_final =(int)(0.4*ac_final+ 0.2*ac_old1+0.2*ac_old2+0.1*ac_old3+0.1*ac_old4);
+  106  1          ac_old1=ac_final; 
+  107  1              ac_old2=ac_old1;
+  108  1              ac_old3=ac_old2;
+  109  1              ac_old4=ac_old3;
+  110  1      
+  111  1              
+  112  1      }
+  113         
+  114          /*******************************************************************************************/
+  115         /*************************************刹车部分总函数*************************************/
+  116         /*******************************************************************************************/
+  117          void brDeal(){
+C166 COMPILER V7.00, GETDEALDATA                                                           03/15/2019 15:27:41 PAGE 3   
+
+  118  1              int br_temp_ad[2]={0,0};
+  119  1              ADC1_vStartSeq0ReqChNum(0,0,0,0);
+  120  1              while(!(ADC1_RCR0 & 0x1000));           //AI1，5V对应0x03FF。制动采集                                    
+  121  1          br_temp_ad[0]=((ADC1_RESR0>>2)&0x0300)>>8;          //high 2bit
+  122  1              br_temp_ad[1]=((ADC1_RESR0>>2)&0x00ff);                 //low  8bit
+  123  1              delay(500);     
+  124  1              br_ad = br_temp_ad[0] * 256 + br_temp_ad[1];
+  125  1              br_ad1=br_ad;
+  126  1              if (br_ad < br_ad_min)   
+  127  1                      br_ad = br_ad_min;                                                              
+  128  1              if (br_ad > br_ad_max)                                   
+  129  1                      br_ad = br_ad_max;      
+  130  1              brAdFinal = (int)(100* (1.0*(br_ad-br_ad_min) / (br_ad_max - br_ad_min)));        
+  131  1       }
+  132         
+  133         
+  134         void delay(int ms)
+  135         {        int i=0,j=0;
+  136  1              for(j=ms;j>0;j--)
+  137  1                      for(i=100;i>0;i--)
+  138  1                      {}
+  139  1      }
+
+
+MODULE INFORMATION:   INITIALIZED  UNINITIALIZED
+  CODE SIZE        =        1014     --------
+  NEAR-CONST SIZE  =          12     --------
+  FAR-CONST SIZE   =    --------     --------
+  HUGE-CONST SIZE  =    --------     --------
+  XHUGE-CONST SIZE =    --------     --------
+  NEAR-DATA SIZE   =          60     --------
+  FAR-DATA SIZE    =    --------     --------
+  XHUGE-DATA SIZE  =    --------     --------
+  IDATA-DATA SIZE  =    --------     --------
+  SDATA-DATA SIZE  =    --------     --------
+  BDATA-DATA SIZE  =    --------     --------
+  HUGE-DATA SIZE   =    --------     --------
+  BIT SIZE         =    --------     --------
+  INIT'L SIZE      =         134     --------
+END OF MODULE INFORMATION.
+
+
+C166 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,635 @@
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 1   
+
+
+C166 COMPILER V7.00, COMPILATION OF MODULE GPT1
+OBJECT MODULE PLACED IN GPT1.OBJ
+COMPILER INVOKED BY: F:\Softeware\Fury\Keil\C166\BIN\C166.EXE GPT1.C MODV2 BROWSE MODV2 DEBUG
+
+ stmt lvl     source
+
+    1         //****************************************************************************
+    2         // @Module        General Purpose Timer Unit (GPT1)
+    3         // @Filename      GPT1.C
+    4         // @Project       test3.dav
+    5         //----------------------------------------------------------------------------
+    6         // @Controller    Infineon XC2267M-104F80
+    7         //
+    8         // @Compiler      Keil
+    9         //
+   10         // @Codegenerator 2.0
+   11         //
+   12         // @Description   This file contains functions that use the GPT1 module.
+   13         //
+   14         //----------------------------------------------------------------------------
+   15         // @Date          2018/11/1 16:59:45
+   16         //
+   17         //****************************************************************************
+   18         
+   19         // USER CODE BEGIN (GPT1_General,1)
+   20         
+   21         // USER CODE END
+   22         
+   23         
+   24         
+   25         //****************************************************************************
+   26         // @Project Includes
+   27         //****************************************************************************
+   28         
+   29         #include "MAIN.H"
+   30         
+   31         // USER CODE BEGIN (GPT1_General,2)
+   32         
+   33         // USER CODE END
+   34         
+   35         
+   36         //****************************************************************************
+   37         // @Macros
+   38         //****************************************************************************
+   39         
+   40         // USER CODE BEGIN (GPT1_General,3)
+   41         
+   42         // USER CODE END
+   43         
+   44         
+   45         //****************************************************************************
+   46         // @Defines
+   47         //****************************************************************************
+   48         
+   49         // USER CODE BEGIN (GPT1_General,4)
+   50         
+   51         // USER CODE END
+   52         
+   53         
+   54         //****************************************************************************
+   55         // @Typedefs
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 2   
+
+   56         //****************************************************************************
+   57         
+   58         // USER CODE BEGIN (GPT1_General,5)
+   59         
+   60         // USER CODE END
+   61         
+   62         
+   63         //****************************************************************************
+   64         // @Imported Global Variables
+   65         //****************************************************************************
+   66         
+   67         // USER CODE BEGIN (GPT1_General,6)
+   68         
+   69         // USER CODE END
+   70         
+   71         
+   72         //****************************************************************************
+   73         // @Global Variables
+   74         //****************************************************************************
+   75         
+   76         // USER CODE BEGIN (GPT1_General,7)
+   77         
+   78         // USER CODE END
+   79         
+   80         
+   81         //****************************************************************************
+   82         // @External Prototypes
+   83         //****************************************************************************
+   84         
+   85         // USER CODE BEGIN (GPT1_General,8)
+   86         
+   87         // USER CODE END
+   88         
+   89         
+   90         //****************************************************************************
+   91         // @Prototypes Of Local Functions
+   92         //****************************************************************************
+   93         
+   94         // USER CODE BEGIN (GPT1_General,9)
+   95         
+   96         // USER CODE END
+   97         
+   98         
+   99         //****************************************************************************
+  100         // @Function      void GPT1_vInit(void) 
+  101         //
+  102         //----------------------------------------------------------------------------
+  103         // @Description   This is the initialization function of the GPT1 function 
+  104         //                library. It is assumed that the SFRs used by this library 
+  105         //                are in reset state. 
+  106         //
+  107         //----------------------------------------------------------------------------
+  108         // @Returnvalue   None
+  109         //
+  110         //----------------------------------------------------------------------------
+  111         // @Parameters    None
+  112         //
+  113         //----------------------------------------------------------------------------
+  114         // @Date          2018/11/1
+  115         //
+  116         //****************************************************************************
+  117         
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 3   
+
+  118         // USER CODE BEGIN (Init,1)
+  119         
+  120         // USER CODE END
+  121         
+  122         void GPT1_vInit(void)
+  123         {
+  124  1        // USER CODE BEGIN (Init,2)
+  125  1      
+  126  1        // USER CODE END
+  127  1        ///  -----------------------------------------------------------------------
+  128  1        ///  Configuration of Timer Block Prescaler 1:
+  129  1        ///  -----------------------------------------------------------------------
+  130  1        GPT12E_KSCCFG  =  0x0003;      // Module Enable
+  131  1      
+  132  1        _nop_();  // one cycle delay 
+  133  1      
+  134  1        _nop_();  // one cycle delay 
+  135  1      
+  136  1      
+  137  1      
+  138  1        ///  -----------------------------------------------------------------------
+  139  1        ///  Configuration of Timer Block Prescaler 1:
+  140  1        ///  -----------------------------------------------------------------------
+  141  1        ///  - prescaler for timer block 1 is 4
+  142  1      
+  143  1      
+  144  1        ///  -----------------------------------------------------------------------
+  145  1        ///  Configuration of the GPT1 Core Timer 3:
+  146  1        ///  -----------------------------------------------------------------------
+  147  1        ///  - timer 3 works in timer mode
+  148  1        ///  - external up/down control is disabled
+  149  1        ///  - prescaler factor is 512
+  150  1        ///  - up/down control bit is reset
+  151  1        ///  - alternate output function T3OUT (P7.0) is disabled
+  152  1        ///  - timer 3 output toggle latch (T3OTL) is set to 0
+  153  1      
+  154  1        GPT12E_T3CON   =  0x0807;      // load timer 3 control register
+  155  1        GPT12E_T3      =  0xFCF3;      // load timer 3 register
+  156  1        ///  - prescaler for timer block 1 is 4
+  157  1      
+  158  1        ///  -----------------------------------------------------------------------
+  159  1        ///  Configuration of the GPT1 Auxiliary Timer 2:
+  160  1        ///  -----------------------------------------------------------------------
+  161  1        ///  - timer 2 works in timer mode
+  162  1        ///  - external up/down control is disabled
+  163  1        ///  - prescaler factor is 4
+  164  1        ///  - up/down control bit is reset
+  165  1        ///  - timer 2 run bit is reset
+  166  1      
+  167  1        GPT12E_T2CON   =  0x0000;      // load timer 2 control register
+  168  1        GPT12E_T2      =  0x0007;      // load timer 2 register
+  169  1        ///  - prescaler for timer block 1 is 4
+  170  1      
+  171  1        ///  -----------------------------------------------------------------------
+  172  1        ///  Configuration of the GPT1 Auxiliary Timer 4:
+  173  1        ///  -----------------------------------------------------------------------
+  174  1        ///  - timer 4 works in timer mode
+  175  1        ///  - external up/down control is disabled
+  176  1        ///  - prescaler factor is 4
+  177  1        ///  - up/down control bit is reset
+  178  1        ///  - timer 4 run bit is reset
+  179  1      
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 4   
+
+  180  1        GPT12E_T4CON   =  0x0000;      // load timer 4 control register
+  181  1        GPT12E_T4      =  0x0000;      // load timer 4 register
+  182  1        ///  - prescaler for timer block 1 is 4
+  183  1      
+  184  1        ///  -----------------------------------------------------------------------
+  185  1        ///  Configuration of the used GPT1 Port Pins:
+  186  1        ///  -----------------------------------------------------------------------
+  187  1      
+  188  1      
+  189  1      
+  190  1        ///  -----------------------------------------------------------------------
+  191  1        ///  Configuration of the used GPT1 Interrupts:
+  192  1        ///  -----------------------------------------------------------------------
+  193  1        ///  timer 3 service request node configuration:
+  194  1        ///  - timer 3 interrupt priority level (ILVL) = 14
+  195  1        ///  - timer 3 interrupt group level (GLVL) = 3
+  196  1        ///  - timer 3 group priority extension (GPX) = 0
+  197  1      
+  198  1        GPT12E_T3IC    =  0x007B;     
+  199  1      
+  200  1        ///  Use PEC channel 3 for GPT1 T3 INT:
+  201  1        ///  - normal interrupt
+  202  1        ///  - pointers are not modified
+  203  1        ///  - transfer a word
+  204  1        ///  - service End of PEC interrrupt by a EOP interrupt node is disabled
+  205  1        ///  - channel link mode is disabled
+  206  1      
+  207  1        PECC3          =  0x0000;      // load PECC3 control register
+  208  1      
+  209  1      
+  210  1      
+  211  1        // USER CODE BEGIN (GPT1_Function,3)
+  212  1      
+  213  1        // USER CODE END
+  214  1      
+  215  1        GPT12E_T3CON_T3R  =  1;        // set timer 3 run bit
+  216  1      
+  217  1      } //  End of function GPT1_viTmr4
+  218         
+  219         
+  220         //****************************************************************************
+  221         // @Function      void GPT1_viTmr3(void) 
+  222         //
+  223         //----------------------------------------------------------------------------
+  224         // @Description   This is the interrupt service routine for the GPT1 timer 3. 
+  225         //                It is called up in the case of over or underflow of the 
+  226         //                timer 3 register.
+  227         //                If the incremental interface mode is selected it is called 
+  228         //                up if count edge or count direction was detected.
+  229         //                
+  230         //                Please note that you have to add application specific code 
+  231         //                to this function.
+  232         //
+  233         //----------------------------------------------------------------------------
+  234         // @Returnvalue   None
+  235         //
+  236         //----------------------------------------------------------------------------
+  237         // @Parameters    None
+  238         //
+  239         //----------------------------------------------------------------------------
+  240         // @Date          2018/11/1
+  241         //
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 5   
+
+  242         //****************************************************************************
+  243         
+  244         // USER CODE BEGIN (Tmr3,1)
+  245         ubyte can0_send[8]={0};//VCU发数据给K60辅助控制器
+  246         ubyte can0_send1[8]={0};
+  247         ubyte can0_send_old[8]={0};
+  248         unsigned int timeFlag=0;
+  249         
+  250         unsigned int allFlag=0;
+  251         
+  252         int temp=0;
+  253         //   启动标志      油门刹车可靠          待驶状态                鸣笛            运行控制
+  254         ubyte startFlag=0,acBrReliableFlag=1,driveReadyFlag=0,beepFlag=0,runFlag=0,SafetyFlag,brFlag=0;
+  255         //鸣笛时间计数
+  256         unsigned int beepTimer=0;
+  257         
+  258          unsigned int can1WatchDog=0,can2WatchDog=0;    
+  259         // USER CODE END
+  260         
+  261         void GPT1_viTmr3(void) interrupt T3INT
+  262         {
+  263  1        // USER CODE BEGIN (Tmr3,2)
+  264  1              can1WatchDog++;
+  265  1              if(can1WatchDog>500)  can1WatchDog=500;
+  266  1              if(can1WatchDog>100)
+  267  1              {
+  268  2                       BatVoltage=9999;
+  269  2                       BatCurrent=9999;
+  270  2                       BatSoc=999;
+  271  2                       MaxTemp=999;   
+  272  2              }
+  273  1              if(can2WatchDog>500)  can2WatchDog=500;
+  274  1              if(can2WatchDog>100)
+  275  1              {
+  276  2                       RotateSpeed=9999;
+  277  2                       mcFlag=999;
+  278  2                       mcuTemp=999;
+  279  2                       motorTemp=999; 
+  280  2              }
+  281  1        // USER CODE END
+  282  1      
+  283  1      
+  284  1        // USER CODE BEGIN (Tmr3,5)
+  285  1      
+  286  1              acDeal(); //获取并处理油门数据，最终数据为 ac_final，acRealiableFlag
+  287  1              brDeal(); //获取并处理油门数据，最终数据为 brAdFinal
+  288  1      
+  289  1              if (brAdFinal>BREAK && StartButton == 0)                //start_flag 启动标志
+  290  1                      startFlag = 1;
+  291  1      
+  292  1               //制动可靠性检查部分如下
+  293  1              if(acBrReliableFlag == 1 && ac_final > 15 && brAdFinal > 15)                    //制动可靠性数值修改
+  294  1                      acBrReliableFlag = 0;
+  295  1              if(acBrReliableFlag == 0 & ac_final < 5)
+  296  1                      acBrReliableFlag = 1;
+  297  1              //电机控制器使能输出控制
+  298  1              if(startFlag == 1 && acRealiableFlag == 1 && acBrReliableFlag == 1)
+  299  1                      runFlag = 1;
+  300  1              else
+  301  1                      runFlag =0; 
+  302  1               //电机控制器使能输出控制 在启动后拔掉油门和制动电机无动力输出
+  303  1              if(ac_ad[0]<5||ac_ad[1]<5)  
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 6   
+
+  304  1                      runFlag =0;     
+  305  1      
+  306  1              //进入待驶状态
+  307  1              if(startFlag == 1 && runFlag == 1 && SafetyLoopDetection==0&& McBTB==0)// 
+  308  1              {
+  309  2                      driveReadyFlag = 1; 
+  310  2                      DriveReadyLed = 1;
+  311  2                      beepFlag = 1;
+  312  2              }
+  313  1              //退出待驶状态          
+  314  1              if(SafetyLoopDetection==1 || McBTB==1  )//      
+  315  1              {
+  316  2                      startFlag=0;
+  317  2                      driveReadyFlag = 0;     
+  318  2                      DriveReadyLed = 0;                              //高边开关2 待驶指示灯灭
+  319  2                      beepFlag = 0;
+  320  2                      beepTimer=0;
+  321  2              }                               
+  322  1              
+  323  1              if( brAdFinal>BREAK){ //刹车灯控制  driveReadyFlag == 1 && startFlag == 1 &&
+  324  2                              BreakLed = 1;
+  325  2                              brFlag=1;
+  326  2              }
+  327  1              else{
+  328  2                      BreakLed = 0;
+  329  2                      brFlag=0;
+  330  2              }       
+  331  1      
+  332  1              //鸣笛控制
+  333  1              if(beepFlag == 1&& beepTimer<BEEPTIME )
+  334  1              {       
+  335  2                      beepTimer ++;
+  336  2                      Beep = 1;                               //高边开关1      鸣笛两秒   
+  337  2              }       
+  338  1              else    Beep = 0;                               //高边开关1      鸣笛停止
+  339  1      
+  340  1      
+  341  1              if(SafetyLoopDetection==0)                SafetyFlag=1;//正常情况
+  342  1              else if(SafetyLoopDetection==1)   SafetyFlag=0;//异常情况
+  343  1              allFlag=acRealiableFlag*1+acBrReliableFlag*2+startFlag*4+runFlag*8      //发送标志编码
+  344  1                              + driveReadyFlag*16+SafetyFlag*32+brFlag*64;
+  345  1               
+  346  1              sendToMc();
+  347  1              sendToK60();
+  348  1      
+  349  1              GPT12E_T3=0xF9E6;                       //设置定时器时间
+  350  1      
+  351  1        // USER CODE BEGIN (Tmr3,5)
+  352  1      
+  353  1        // USER CODE END
+  354  1      
+  355  1      } //  End of function GPT1_viTmr3
+  356         
+  357         
+  358         
+  359         
+  360         // USER CODE BEGIN (GPT1_General,10)
+  361         
+  362          void sendToK60(){//CAN2
+  363  1                      int i=0;
+  364  1              ubyte repeat=0;
+  365  1              
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 7   
+
+  366  1              timeFlag++;
+  367  1              temp+=10;
+  368  1              temp=temp>9000?0:temp;
+  369  1      
+  370  1               if(timeFlag%2==1){//转速，速度显示要实时性，5ms发送一次
+  371  2                      //转速发送
+  372  2                      can0_send[0]=0x01;
+  373  2                      can0_send[1]=(ubyte)(RotateSpeed/256);   //RotateSpeed
+  374  2                      can0_send[2]=(ubyte)(RotateSpeed%256);
+  375  2                      //速度发送
+  376  2                      can0_send[4]=0x02;
+  377  2                      can0_send[5]=(ubyte)(RotateSpeed/256);  //       RotateSpeed
+  378  2                      can0_send[6]=(ubyte)(RotateSpeed%256);
+  379  2              }
+  380  1          else if(timeFlag%2==0){     //实时性要求不高  2,4,6   50ms发送一次
+  381  2                      if(timeFlag%10==2){//2
+  382  3                              //SOC
+  383  3                              can0_send[0]=0x03;
+  384  3                              can0_send[1]=(ubyte)(BatSoc/256); //  BatSoc
+  385  3                              can0_send[2]=(ubyte)(BatSoc%256);
+  386  3                              //电池温度
+  387  3                              can0_send[4]=0x04;
+  388  3                              can0_send[5]=(ubyte)(MaxTemp/256);       //       MaxTemp
+  389  3                              can0_send[6]=(ubyte)(MaxTemp%256);
+  390  3                      }
+  391  2                      else if(timeFlag%10==4){//4
+  392  3                              //电池电压
+  393  3                              can0_send[0]=0x05;
+  394  3                              can0_send[1]=(ubyte)(BatVoltage/256); //  BatVoltage
+  395  3                              can0_send[2]=(ubyte)(BatVoltage%256);
+  396  3                              //电池电流
+  397  3                              can0_send[4]=0x06;
+  398  3                              can0_send[5]=(ubyte)(BatCurrent/256);    //       BatCurrent
+  399  3                              can0_send[6]=(ubyte)(BatCurrent%256);
+  400  3                      }
+  401  2                      else if(timeFlag%10==6){//6
+  402  3                              
+  403  3                              can0_send[0]=0x07;
+  404  3                              can0_send[1]=(ubyte)(ac_final%256);     //油门    0~100                  //      ac_final
+  405  3                              can0_send[2]=(ubyte)(brAdFinal%256);    //刹车 0~100             //brAdFinal
+  406  3                              
+  407  3                              can0_send[4]=0x08;
+  408  3                              can0_send[5]=(ubyte)(allFlag%256);  //allFlag   0~128      //     allFlag
+  409  3                              can0_send[6]=(ubyte)(gear%256);  //gear         0~6                       //      gear
+  410  3                      }
+  411  2                      else if(timeFlag%10==8){//8
+  412  3                              
+  413  3                              can0_send[0]=0x09;
+  414  3                              can0_send[1]=(ubyte)(mcFlag%256);       //电控状态标志           //        mcFlag
+  415  3      
+  416  3                              
+  417  3                              can0_send[4]=0x0a;
+  418  3                              can0_send[5]=(ubyte)(motorTemp%256);  //电机温度           //    motorTemp
+  419  3                      }
+  420  2                      else if(timeFlag%10==0){//10
+  421  3                              
+  422  3                              can0_send[0]=0x0b;
+  423  3                              can0_send[1]=(ubyte)(mcuTemp%256);      //电控控制器温度        //      mcuTemp
+  424  3                      }
+  425  2               }
+  426  1      
+  427  1              for(i=0;i<8;i++){
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 8   
+
+  428  2                      if(can0_send_old[i]!=can0_send[i]){
+  429  3                              repeat++;
+  430  3                              break;
+  431  3                      }
+  432  2                              
+  433  2              }
+  434  1              if(repeat!=0){//避免发送重复的消息，减少总线使用
+  435  2                      CAN_vLoadData(0,can0_send);     //0为消息序号，AD为数据地址，长度，ID帧在Dave中设置。
+  436  2                      CAN_vTransmit(0);
+  437  2                      repeat=0;
+  438  2              }
+  439  1          for(i=0;i<8;i++)                                                     
+  440  1                      can0_send_old[i]=can0_send[i];
+  441  1      
+  442  1        timeFlag=timeFlag>100?0:timeFlag;
+  443  1      }
+  444         
+  445         ubyte control_period=0;
+  446         int finalSend_old=0;
+  447         int finalSend=0;
+  448         void sendToMc(){ //CAN0          电机旋变角3651
+  449  1      
+  450  1                                                                                                              
+  451  1      
+  452  1      //      can1_send2[2] = 0x64;                                   // 0xFC                         低位在前
+  453  1      //      can1_send2[3] = 0x00;                                   // 0x3F  示例50%        高位在后
+  454  1      
+  455  1              if(control_period >=4)  //控制周期     20ms
+  456  1                      control_period = 0;
+  457  1              control_period ++;
+  458  1      
+  459  1              if(control_period==4)             //控制周期     20ms
+  460  1              {
+  461  2              //      
+  462  2                      /*
+  463  2                      百分比  10%   20%   30%    40%          50%     60%     70%     80%     90%     99%     
+  464  2                      加权值  1         2             3          4            5               6               7               8               9               10       gearWeight
+  465  2              */      
+  466  2                      ac_final=acChangeLimit(ac_final); //油门加速变化率限幅  10 为0.5S
+  467  2                      ac_final=ac_final>99? 99:ac_final;
+  468  2                      ac_final=ac_final<0? 0:ac_final;
+  469  2                      finalSend=torqueChange();        //     降低高转速时转矩输出
+  470  2      
+  471  2                      
+  472  2                      /**************修改了此处***********/
+  473  2                      if(     (finalSend-     finalSend_old )>50&&finalSend>500){
+  474  3                              finalSend=finalSend_old+50;
+  475  3                      }
+  476  2                      finalSend_old=finalSend;
+  477  2                      
+  478  2      
+  479  2      
+  480  2                      finalSend=finalSend>999?999:finalSend;
+  481  2                      finalSend=finalSend<0?0:finalSend;
+  482  2                      can1_send2[2] = (ubyte)(finalSend % 256);                                       // 0x64                         低位在前  》》》限速所在位置
+  483  2                      can1_send2[3] = (ubyte)(finalSend >> 8);                                        // 0x00  示例10%        高位在后  》》》限速所在位置
+  484  2                      if(driveReadyFlag ==1 & runFlag==1)
+  485  2                      {
+  486  3                              CAN_vLoadData(1,can1_send2);    //0为消息序号，D_command为数据地址，长度，节点，ID帧在Dave中设置。
+  487  3                              CAN_vTransmit(1);
+  488  3                      }
+  489  2                      if(runFlag==0)
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 9   
+
+  490  2                      {
+  491  3                              can1_send2[2] = 0;                                      // 0x64                         低位在前  》》》限速所在位置
+  492  3                              can1_send2[3] = 0;                                      // 0x00  示例10%        高位在后  》》》限速所在位置
+  493  3                              CAN_vLoadData(1,can1_send2);    //0为消息序号，N_command为数据地址，长度，节点，ID帧在Dave中设置。
+  494  3                              CAN_vTransmit(1);
+  495  3                      }
+  496  2              } //控制周期控制结束
+  497  1      }
+  498         
+  499         /*******************************************************************************************/
+  500         /*************************************油门加速变化率限幅*************************************/
+  501         /*********输入：油门数据         返回：限制后的油门数据************************************/
+  502         /*******************************************************************************************/
+  503         int ac_old=0;
+  504         int acChangeLimit(int ac){
+  505  1              
+  506  1              if(ac-ac_old>AC_CHANGE_LIMIT)
+  507  1                      ac=ac_old+AC_CHANGE_LIMIT;
+  508  1              
+  509  1               ac_old=ac;
+  510  1               return ac;
+  511  1       }      
+  512         
+  513          /*******************************************************************************************/
+  514         /*************************************降低高转速时转矩输出***********************************/
+  515         /*********输入：油门限制变化率后的转矩*******************************************************/
+  516         /*********返回：高转速时，逐步降低转矩后*****************************************************/
+  517         /*******************************************************************************************/
+  518         
+  519         int torqueChange(){
+  520  1              int torqueFinal =0,torqueLimit= 0;
+  521  1              RotateSpeed=RotateSpeed<0?0:RotateSpeed;
+  522  1              /*
+  523  1              if (RotateSpeed>4500){
+  524  1                      torqueLimit = (int)(150 + 50 * (1 - ((1.0*RotateSpeed - 4500) / 300)));
+  525  1                      torqueLimit = torqueLimit<150 ? 150 : torqueLimit;
+  526  1              }
+  527  1              else if (RotateSpeed>4200){
+  528  1                      torqueLimit = (int)(200 + 150 * (1 - ((1.0*RotateSpeed - 4200) / 300)));        
+  529  1              }
+  530  1              else if (RotateSpeed>3500){
+  531  1                      torqueLimit = (int)(350 + (150 * (1 - ((1.0*RotateSpeed - 3500) / 700))));
+  532  1      
+  533  1              }
+  534  1              else if (RotateSpeed>3000){
+  535  1                      torqueLimit = (int)(500 + (200 * (1 - ((1.0*RotateSpeed - 3000) / 500))));
+  536  1              }
+  537  1              else if (RotateSpeed>2000){
+  538  1                      torqueLimit = (int)(700 + (299 * (1 - ((1.0*RotateSpeed - 2000) / 1000))));
+  539  1              }
+  540  1              else torqueLimit = 999;   */
+  541  1              if (RotateSpeed>4500){
+  542  2                      torqueLimit = 200;
+  543  2              }
+  544  1              else if (RotateSpeed>4200){
+  545  2                      torqueLimit = (int)(100 + 100 * (1 - ((1.0*RotateSpeed - 4200) / 300)));
+  546  2              }
+  547  1              else if (RotateSpeed>3900){
+  548  2                      torqueLimit = (int)(200 + (150 * (1 - ((1.0*RotateSpeed - 3900) / 300))));
+  549  2              }
+  550  1              else if (RotateSpeed>3600){
+  551  2                      torqueLimit = (int)(350 + (150 * (1 - ((1.0*RotateSpeed - 3600) / 300))));
+C166 COMPILER V7.00, GPT1                                                                  03/15/2019 15:27:41 PAGE 10  
+
+  552  2              }
+  553  1              else if (RotateSpeed>3300){
+  554  2                      torqueLimit = (int)(500 + (100 * (1 - ((1.0*RotateSpeed - 3300) / 300))));
+  555  2              }
+  556  1              else if (RotateSpeed>3000){
+  557  2                      torqueLimit = (int)(600 + (100 * (1 - ((1.0*RotateSpeed - 3000) / 300))));
+  558  2              }
+  559  1              else if (RotateSpeed>2700){
+  560  2                      torqueLimit = (int)(700 + (50 * (1 - ((1.0*RotateSpeed - 2700) / 300))));
+  561  2      
+  562  2              }
+  563  1              else if (RotateSpeed>2400){
+  564  2                      torqueLimit = (int)(750 + (100 * (1 - ((1.0*RotateSpeed - 2400) / 300))));
+  565  2              }
+  566  1              else if (RotateSpeed>2100){
+  567  2                      torqueLimit = (int)(850 + (50 * (1 - ((1.0*RotateSpeed - 2100) / 300))));
+  568  2              }
+  569  1              else if (RotateSpeed>1800){
+  570  2                      torqueLimit = (int)(900 + (25 * (1 - ((1.0*RotateSpeed - 1800) / 300))));
+  571  2              }
+  572  1              else if (RotateSpeed>1500){
+  573  2                      torqueLimit = (int)(925 + (25 * (1 - ((1.0*RotateSpeed - 1500) / 300))));
+  574  2              }
+  575  1              else if (RotateSpeed>1200){
+  576  2                      torqueLimit = (int)(950 + (50 * (1 - ((1.0*RotateSpeed - 1200) / 300))));
+  577  2              }
+  578  1              else torqueLimit = 999;
+  579  1              torqueLimit = torqueLimit >(99*gearWeight)?(99*gearWeight):torqueLimit;
+  580  1              torqueLimit = torqueLimit<0 ? 0 : torqueLimit;
+  581  1              torqueFinal = (1.0*torqueLimit/100)*ac_final;
+  582  1              
+  583  1              
+  584  1              return torqueFinal;                                                
+  585  1      }
+  586         // USER CODE END
+  587         
+
+
+MODULE INFORMATION:   INITIALIZED  UNINITIALIZED
+  CODE SIZE        =        2384     --------
+  NEAR-CONST SIZE  =    --------     --------
+  FAR-CONST SIZE   =    --------     --------
+  HUGE-CONST SIZE  =    --------     --------
+  XHUGE-CONST SIZE =    --------     --------
+  NEAR-DATA SIZE   =          50     --------
+  FAR-DATA SIZE    =    --------     --------
+  XHUGE-DATA SIZE  =    --------     --------
+  IDATA-DATA SIZE  =    --------     --------
+  SDATA-DATA SIZE  =    --------     --------
+  BDATA-DATA SIZE  =    --------     --------
+  HUGE-DATA SIZE   =    --------     --------
+  BIT SIZE         =    --------     --------
+  INIT'L SIZE      =         132     --------
+END OF MODULE INFORMATION.
+
+
+C166 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

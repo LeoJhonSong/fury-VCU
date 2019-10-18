@@ -1,0 +1,141 @@
+// v_2.45.2, Wed May 23 22:26:24 2018
+#line 1 "GetDealData.cpp"
+#line 161 "SCS.H"
+enum SCS_ErrorType {
+SCS_STATE_NO_ERROR,
+SCS_STATE_TO_OSC_HP_PLLV,
+SCS_STATE_OFW_ATTEMPTS_OSC_HP,
+SCS_STATE_TO_OSC_HP_SEL,
+SCS_STATE_TO_K1DIV,
+SCS_STATE_TO_K2DIV,
+SCS_STATE_TO_PDIV,
+SCS_STATE_TO_NDIV,
+SCS_STATE_TO_VCOBYST,
+SCS_STATE_TO_VCO_LOCK,
+SCS_STATE_VCO_UNLOCKED};
+#line 178
+enum SCS_Extclk_Type {
+SCS_EXTCLK_F_SYS,
+SCS_EXTCLK_F_OUT,
+SCS_EXTCLK_F_PLL,
+SCS_EXTCLK_F_OSC,
+SCS_EXTCLK_F_WU,
+SCS_EXTCLK_F_CLKIN1,
+SCS_EXTCLK_F_RTC = 8};
+#line 25 "XC22xxMREGS.H"
+typedef unsigned char ubyte;
+
+typedef unsigned uword;
+#line 123 "ADC1.H"
+extern void ADC1_vStartSeq0ReqChNum__FUcN31(ubyte, ubyte, ubyte, ubyte);
+#line 15 "GetDealData.cpp"
+extern void delay__Fi(int);
+#line 22
+extern void get_AD__Fv(void);
+#line 38
+extern void get_MostValue__Fv(void);
+#line 47
+extern void normalize__Fv(void);
+#line 60
+extern void DataDeal__FiT1(int, int);
+#line 4
+extern int ac_br_max[2];
+extern int ac_br_min[2];
+
+
+extern int AD[2];
+extern int ac_br_normolize[2];
+
+
+extern int myAD[4];
+extern int ac_data1; extern int ac_data2;
+#line 4
+int ac_br_max[2] = {4000,95};
+int ac_br_min[2] = {100,30};
+
+
+int AD[2] = {0};
+int ac_br_normolize[2] = {0};
+
+
+int myAD[4] = {0,0,0,0};
+int ac_data1 = 0; int ac_data2 = 0;
+
+void delay__Fi( int ms)
+{ auto int i; auto int j;
+for (j = ms; (j > 0); j--) {
+for (i = 1000; (i > 0); i--)
+{ } } return;
+}
+
+void get_AD__Fv(void)
+{
+ADC1_vStartSeq0ReqChNum__FUcN31(((ubyte)0U), ((ubyte)0U), ((ubyte)0U), ((ubyte)2U));
+while (!(((*((volatile uword *)57780U))) & 4096U)) { }
+(myAD[0]) = ((int)(((((*((volatile uword *)57668U))) >> 2) & 768U) >> 8));
+(myAD[1]) = ((int)((((*((volatile uword *)57668U))) >> 2) & 255U));
+ac_data1 = (((myAD[0]) * 256) + (myAD[1]));
+delay__Fi(500);
+
+ADC1_vStartSeq0ReqChNum__FUcN31(((ubyte)0U), ((ubyte)0U), ((ubyte)0U), ((ubyte)4U));
+while (!(((*((volatile uword *)57784U))) & 4096U)) { }
+(myAD[2]) = ((int)(((((*((volatile uword *)57672U))) >> 2) & 768U) >> 8));
+(myAD[3]) = ((int)((((*((volatile uword *)57672U))) >> 2) & 255U));
+ac_data2 = (((myAD[2]) * 256) + (myAD[3]));
+delay__Fi(500); return;
+}
+void get_MostValue__Fv(void)
+{
+auto int i;{ i = 0; for (; (i < 2); i++)
+{
+(ac_br_max[i]) = (((AD[i]) > (ac_br_max[i])) ? (AD[i]) : (ac_br_max[i]));
+(ac_br_min[i]) = (((AD[i]) < (ac_br_min[i])) ? (AD[i]) : (ac_br_min[i]));
+}} return;
+}
+
+void normalize__Fv(void)
+{
+auto int i;{ i = 0; for (; (i < 2); i++)
+{
+(AD[i]) = (((AD[i]) > (ac_br_max[i])) ? (ac_br_max[i]) : (AD[i]));
+(AD[i]) = (((AD[i]) < (ac_br_min[i])) ? (ac_br_min[i]) : (AD[i]));
+(ac_br_normolize[i]) = ((100 * ((AD[i]) - (ac_br_min[i]))) / ((ac_br_max[i]) - (ac_br_min[i])));
+}} return;
+}
+
+
+
+
+void DataDeal__FiT1( int AcData,  int BrData)
+{
+auto int ac_br_w[2][10] = {{6,7,8,9,10,11,11,12,13,13},{6,7,8,9,10,11,11,12,13,13}};
+
+auto int ac_br_base[2] = {10,10};
+auto int ac_br_section = 0;
+auto int ac_br_old[2] = {0,0};
+auto int ac_br_now[2] = {0,0};
+
+
+
+auto int i;
+#line 69
+(((int *)ac_br_old)[0]) = AcData;
+(((int *)ac_br_old)[1]) = BrData;{
+i = 0; for (; (i < 2); i++)
+{
+
+
+auto int j;
+#line 73
+ac_br_section = ((((int *)ac_br_old)[i]) / (((int *)ac_br_base)[i]));
+(((int *)ac_br_now)[i]) = 0;{
+j = 0; for (; (j < ac_br_section); j++)
+{
+(((int *)ac_br_now)[i]) += (((int *)(((int (*)[10])ac_br_w) + i))[j]);
+}}
+if (((((int *)ac_br_old)[i]) - ((((int *)ac_br_base)[i]) * ac_br_section)) > 0) {
+(((int *)ac_br_now)[i]) += ((int)(((((1.000000000000000000e+000) * ((double)(((int *)(((int (*)[10])ac_br_w) + i))[ac_br_section]))) * ((double)((((int *)ac_br_old)[i]) % (((int *)ac_br_base)[i])))) / ((double)(((int *)ac_br_base)[i]))) + (5.000000000000000000e-001))); }
+((((int *)ac_br_now)[i]) > 100) ? 100 : (((int *)ac_br_now)[i]);
+
+}} return;
+}
