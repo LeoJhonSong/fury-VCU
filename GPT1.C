@@ -242,7 +242,7 @@ void GPT1_vInit(void)
 //****************************************************************************
 
 // USER CODE BEGIN (Tmr3,1)
-ubyte can0_send[8]={0};//VCU·¢Êı¾İ¸øK60¸¨Öú¿ØÖÆÆ÷
+ubyte can0_send[8]={0};//VCUå‘æ•°æ®ç»™K60è¾…åŠ©æ§åˆ¶å™¨
 ubyte can0_send1[8]={0};
 ubyte can0_send_old[8]={0};
 unsigned int timeFlag=0;
@@ -250,9 +250,9 @@ unsigned int timeFlag=0;
 unsigned int allFlag=0;
 
 int temp=0;
-//   Æô¶¯±êÖ¾	   ÓÍÃÅÉ²³µ¿É¿¿		 ´ıÊ»×´Ì¬		 ÃùµÑ		 ÔËĞĞ¿ØÖÆ
+//   å¯åŠ¨æ ‡å¿—	   æ²¹é—¨åˆ¹è½¦å¯é 		 å¾…é©¶çŠ¶æ€		 é¸£ç¬›		 è¿è¡Œæ§åˆ¶
 ubyte startFlag=0,acBrReliableFlag=1,driveReadyFlag=0,beepFlag=0,runFlag=0,SafetyFlag,brFlag=0;
-//ÃùµÑÊ±¼ä¼ÆÊı
+//é¸£ç¬›æ—¶é—´è®¡æ•°
 unsigned int beepTimer=0;
 
  unsigned int can1WatchDog=0,can2WatchDog=0;	
@@ -270,6 +270,7 @@ void GPT1_viTmr3(void) interrupt T3INT
 		 BatSoc=999;
 		 MaxTemp=999;	
 	}
+	//FIXME: miss can2WatchDog++;?
 	if(can2WatchDog>500)  can2WatchDog=500;
 	if(can2WatchDog>100)
 	{
@@ -283,44 +284,46 @@ void GPT1_viTmr3(void) interrupt T3INT
 
   // USER CODE BEGIN (Tmr3,5)
 
-	acDeal(); //»ñÈ¡²¢´¦ÀíÓÍÃÅÊı¾İ£¬×îÖÕÊı¾İÎª ac_final£¬acRealiableFlag
-	brDeal(); //»ñÈ¡²¢´¦ÀíÓÍÃÅÊı¾İ£¬×îÖÕÊı¾İÎª brAdFinal
+	acDeal(); //è·å–å¹¶å¤„ç†æ²¹é—¨æ•°æ®ï¼Œæœ€ç»ˆæ•°æ®ä¸º ac_finalï¼ŒacRealiableFlag
+	brDeal(); //è·å–å¹¶å¤„ç†æ²¹é—¨æ•°æ®ï¼Œæœ€ç»ˆæ•°æ®ä¸º brAdFinal
 
-	if (brAdFinal>BREAK && StartButton == 0)		//start_flag Æô¶¯±êÖ¾
+	if (brAdFinal>BREAK && StartButton == 0)		//start_flag å¯åŠ¨æ ‡å¿—
 		startFlag = 1;
 
-	 //ÖÆ¶¯¿É¿¿ĞÔ¼ì²é²¿·ÖÈçÏÂ
-	if(acBrReliableFlag == 1 && ac_final > 15 && brAdFinal > 15)		 	//ÖÆ¶¯¿É¿¿ĞÔÊıÖµĞŞ¸Ä
+	 //åˆ¶åŠ¨å¯é æ€§æ£€æŸ¥éƒ¨åˆ†å¦‚ä¸‹
+	if(acBrReliableFlag == 1 && ac_final > 15 && brAdFinal > 15)		 	//åˆ¶åŠ¨å¯é æ€§æ•°å€¼ä¿®æ”¹
 		acBrReliableFlag = 0;
 	if(acBrReliableFlag == 0 & ac_final < 5)
 		acBrReliableFlag = 1;
-	//µç»ú¿ØÖÆÆ÷Ê¹ÄÜÊä³ö¿ØÖÆ
+	//ç”µæœºæ§åˆ¶å™¨ä½¿èƒ½è¾“å‡ºæ§åˆ¶
+	//FIXME: ç”µæ§è¾“å‡ºä½¿èƒ½? ç”µæ§ä½¿èƒ½ç”µæœº -> ç”µæœºè¾“å‡ºä½¿èƒ½?
 	if(startFlag == 1 && acRealiableFlag == 1 && acBrReliableFlag == 1)
 		runFlag = 1;
 	else
 		runFlag =0; 
-	 //µç»ú¿ØÖÆÆ÷Ê¹ÄÜÊä³ö¿ØÖÆ ÔÚÆô¶¯ºó°ÎµôÓÍÃÅºÍÖÆ¶¯µç»úÎŞ¶¯Á¦Êä³ö
+	 //ç”µæœºæ§åˆ¶å™¨ä½¿èƒ½è¾“å‡ºæ§åˆ¶ åœ¨å¯åŠ¨åæ‹”æ‰æ²¹é—¨å’Œåˆ¶åŠ¨ç”µæœºæ— åŠ¨åŠ›è¾“å‡º
+	 //FIXME: br_ad? is 5 OK? 5æ˜¯ä¸è¸©åˆ¶åŠ¨ä¹Ÿåº”æœ‰çš„å€¼?
 	if(ac_ad[0]<5||ac_ad[1]<5)  
-		runFlag =0; 	
+		runFlag =0;
 
-	//½øÈë´ıÊ»×´Ì¬
+	//è¿›å…¥å¾…é©¶çŠ¶æ€
 	if(startFlag == 1 && runFlag == 1 && SafetyLoopDetection==0&& McBTB==0)// 
 	{
 		driveReadyFlag = 1; 
 		DriveReadyLed = 1;
 		beepFlag = 1;
 	}
-	//ÍË³ö´ıÊ»×´Ì¬		
+	//é€€å‡ºå¾…é©¶çŠ¶æ€		
 	if(SafetyLoopDetection==1 || McBTB==1  )//	
 	{
 		startFlag=0;
 		driveReadyFlag = 0;	
-		DriveReadyLed = 0;		   		//¸ß±ß¿ª¹Ø2 ´ıÊ»Ö¸Ê¾µÆÃğ
+		DriveReadyLed = 0;		   		//é«˜è¾¹å¼€å…³2 å¾…é©¶æŒ‡ç¤ºç¯ç­
 		beepFlag = 0;
 		beepTimer=0;
 	}	   			
 	
-	if( brAdFinal>BREAK){ //É²³µµÆ¿ØÖÆ  driveReadyFlag == 1 && startFlag == 1 &&
+	if( brAdFinal>BREAK){ //åˆ¹è½¦ç¯æ§åˆ¶  driveReadyFlag == 1 && startFlag == 1 &&
 			BreakLed = 1;
 			brFlag=1;
 	}
@@ -329,24 +332,24 @@ void GPT1_viTmr3(void) interrupt T3INT
 		brFlag=0;
 	}	
 
-	//ÃùµÑ¿ØÖÆ
+	//é¸£ç¬›æ§åˆ¶
 	if(beepFlag == 1&& beepTimer<BEEPTIME )
 	{	
 		beepTimer ++;
-		Beep = 1;				//¸ß±ß¿ª¹Ø1	 ÃùµÑÁ½Ãë   
+		Beep = 1;				//é«˜è¾¹å¼€å…³1	 é¸£ç¬›ä¸¤ç§’   
 	}	
-	else	Beep = 0;				//¸ß±ß¿ª¹Ø1	 ÃùµÑÍ£Ö¹
+	else	Beep = 0;				//é«˜è¾¹å¼€å…³1	 é¸£ç¬›åœæ­¢
 
 
-	if(SafetyLoopDetection==0)	  	  SafetyFlag=1;//Õı³£Çé¿ö
-	else if(SafetyLoopDetection==1)	  SafetyFlag=0;//Òì³£Çé¿ö
-	allFlag=acRealiableFlag*1+acBrReliableFlag*2+startFlag*4+runFlag*8	//·¢ËÍ±êÖ¾±àÂë
+	if(SafetyLoopDetection==0)	  	  SafetyFlag=1;//æ­£å¸¸æƒ…å†µ
+	else if(SafetyLoopDetection==1)	  SafetyFlag=0;//å¼‚å¸¸æƒ…å†µ
+	allFlag=acRealiableFlag*1+acBrReliableFlag*2+startFlag*4+runFlag*8	//å‘é€æ ‡å¿—ç¼–ç 
 			+ driveReadyFlag*16+SafetyFlag*32+brFlag*64;
 	 
 	sendToMc();
 	sendToK60();
 
-	GPT12E_T3=0xF9E6;	   		//ÉèÖÃ¶¨Ê±Æ÷Ê±¼ä
+	GPT12E_T3=0xF9E6;	   		//è®¾ç½®å®šæ—¶å™¨æ—¶é—´
 
   // USER CODE BEGIN (Tmr3,5)
 
@@ -367,33 +370,33 @@ void GPT1_viTmr3(void) interrupt T3INT
 	temp+=10;
 	temp=temp>9000?0:temp;
 
-	 if(timeFlag%2==1){//×ªËÙ£¬ËÙ¶ÈÏÔÊ¾ÒªÊµÊ±ĞÔ£¬5ms·¢ËÍÒ»´Î
-	 	//×ªËÙ·¢ËÍ
+	 if(timeFlag%2==1){//è½¬é€Ÿï¼Œé€Ÿåº¦æ˜¾ç¤ºè¦å®æ—¶æ€§ï¼Œ5mså‘é€ä¸€æ¬¡
+	 	//è½¬é€Ÿå‘é€
 		can0_send[0]=0x01;
 		can0_send[1]=(ubyte)(RotateSpeed/256);	 //RotateSpeed
 		can0_send[2]=(ubyte)(RotateSpeed%256);
-		//ËÙ¶È·¢ËÍ
+		//é€Ÿåº¦å‘é€
 		can0_send[4]=0x02;
 		can0_send[5]=(ubyte)(RotateSpeed/256);	//	 RotateSpeed
 		can0_send[6]=(ubyte)(RotateSpeed%256);
 	}
-    else if(timeFlag%2==0){	//ÊµÊ±ĞÔÒªÇó²»¸ß  2,4,6   50ms·¢ËÍÒ»´Î
+    else if(timeFlag%2==0){	//å®æ—¶æ€§è¦æ±‚ä¸é«˜  2,4,6   50mså‘é€ä¸€æ¬¡
 		if(timeFlag%10==2){//2
 			//SOC
 			can0_send[0]=0x03;
 			can0_send[1]=(ubyte)(BatSoc/256); //  BatSoc
 			can0_send[2]=(ubyte)(BatSoc%256);
-			//µç³ØÎÂ¶È
+			//ç”µæ± æ¸©åº¦
 			can0_send[4]=0x04;
 			can0_send[5]=(ubyte)(MaxTemp/256);	 //	  MaxTemp
 			can0_send[6]=(ubyte)(MaxTemp%256);
 		}
 		else if(timeFlag%10==4){//4
-			//µç³ØµçÑ¹
+			//ç”µæ± ç”µå‹
 			can0_send[0]=0x05;
 			can0_send[1]=(ubyte)(BatVoltage/256); //  BatVoltage
 			can0_send[2]=(ubyte)(BatVoltage%256);
-			//µç³ØµçÁ÷
+			//ç”µæ± ç”µæµ
 			can0_send[4]=0x06;
 			can0_send[5]=(ubyte)(BatCurrent/256);	 //	  BatCurrent
 			can0_send[6]=(ubyte)(BatCurrent%256);
@@ -401,8 +404,8 @@ void GPT1_viTmr3(void) interrupt T3INT
 		else if(timeFlag%10==6){//6
 			
 			can0_send[0]=0x07;
-			can0_send[1]=(ubyte)(ac_final%256);	//ÓÍÃÅ 	  0~100			 //	 ac_final
-			can0_send[2]=(ubyte)(brAdFinal%256);	//É²³µ 0~100		 //brAdFinal
+			can0_send[1]=(ubyte)(ac_final%256);	//æ²¹é—¨ 	  0~100			 //	 ac_final
+			can0_send[2]=(ubyte)(brAdFinal%256);	//åˆ¹è½¦ 0~100		 //brAdFinal
 			
 			can0_send[4]=0x08;
 			can0_send[5]=(ubyte)(allFlag%256);  //allFlag	0~128	   //	  allFlag
@@ -411,16 +414,16 @@ void GPT1_viTmr3(void) interrupt T3INT
 		else if(timeFlag%10==8){//8
 			
 			can0_send[0]=0x09;
-			can0_send[1]=(ubyte)(mcFlag%256);	//µç¿Ø×´Ì¬±êÖ¾		 //	   mcFlag
+			can0_send[1]=(ubyte)(mcFlag%256);	//ç”µæ§çŠ¶æ€æ ‡å¿—		 //	   mcFlag
 
 			
 			can0_send[4]=0x0a;
-			can0_send[5]=(ubyte)(motorTemp%256);  //µç»úÎÂ¶È	   //	 motorTemp
+			can0_send[5]=(ubyte)(motorTemp%256);  //ç”µæœºæ¸©åº¦	   //	 motorTemp
 		}
 		else if(timeFlag%10==0){//10
 			
 			can0_send[0]=0x0b;
-			can0_send[1]=(ubyte)(mcuTemp%256);	//µç¿Ø¿ØÖÆÆ÷ÎÂ¶È	//	mcuTemp
+			can0_send[1]=(ubyte)(mcuTemp%256);	//ç”µæ§æ§åˆ¶å™¨æ¸©åº¦	//	mcuTemp
 		}
 	 }
 
@@ -431,8 +434,8 @@ void GPT1_viTmr3(void) interrupt T3INT
 		}
 			
 	}
-	if(repeat!=0){//±ÜÃâ·¢ËÍÖØ¸´µÄÏûÏ¢£¬¼õÉÙ×ÜÏßÊ¹ÓÃ
-		CAN_vLoadData(0,can0_send);	//0ÎªÏûÏ¢ĞòºÅ£¬ADÎªÊı¾İµØÖ·£¬³¤¶È£¬IDÖ¡ÔÚDaveÖĞÉèÖÃ¡£
+	if(repeat!=0){//é¿å…å‘é€é‡å¤çš„æ¶ˆæ¯ï¼Œå‡å°‘æ€»çº¿ä½¿ç”¨
+		CAN_vLoadData(0,can0_send);	//0ä¸ºæ¶ˆæ¯åºå·ï¼ŒADä¸ºæ•°æ®åœ°å€ï¼Œé•¿åº¦ï¼ŒIDå¸§åœ¨Daveä¸­è®¾ç½®ã€‚
 		CAN_vTransmit(0);
 		repeat=0;
 	}
@@ -445,31 +448,31 @@ void GPT1_viTmr3(void) interrupt T3INT
 ubyte control_period=0;
 int finalSend_old=0;
 int finalSend=0;
-void sendToMc(){ //CAN0		 µç»úĞı±ä½Ç3651
+void sendToMc(){ //CAN0		 ç”µæœºæ—‹å˜è§’3651
 
  										 			
 
-//	can1_send2[2] = 0x64;		  			// 0xFC	 			µÍÎ»ÔÚÇ°
-//	can1_send2[3] = 0x00;					// 0x3F  Ê¾Àı50%	¸ßÎ»ÔÚºó
+//	can1_send2[2] = 0x64;		  			// 0xFC	 			ä½ä½åœ¨å‰
+//	can1_send2[3] = 0x00;					// 0x3F  ç¤ºä¾‹50%	é«˜ä½åœ¨å
 
-	if(control_period >=4)  //¿ØÖÆÖÜÆÚ     20ms
+	if(control_period >=4)  //æ§åˆ¶å‘¨æœŸ     20ms
 		control_period = 0;
 	control_period ++;
 
-	if(control_period==4)		  //¿ØÖÆÖÜÆÚ     20ms
+	if(control_period==4)		  //æ§åˆ¶å‘¨æœŸ     20ms
 	{
 	//	
 		/*
-		°Ù·Ö±È	10%   20%   30%	   40%		50% 	60% 	70% 	80% 	90% 	99%	
-		¼ÓÈ¨Öµ	1	  2		3	   4		5		6		7		8		9		10	 gearWeight
+		ç™¾åˆ†æ¯”	10%   20%   30%	   40%		50% 	60% 	70% 	80% 	90% 	99%	
+		åŠ æƒå€¼	1	  2		3	   4		5		6		7		8		9		10	 gearWeight
 	*/	
-		ac_final=acChangeLimit(ac_final); //ÓÍÃÅ¼ÓËÙ±ä»¯ÂÊÏŞ·ù  10 Îª0.5S
+		ac_final=acChangeLimit(ac_final); //æ²¹é—¨åŠ é€Ÿå˜åŒ–ç‡é™å¹…  10 ä¸º0.5S
 		ac_final=ac_final>99? 99:ac_final;
 		ac_final=ac_final<0? 0:ac_final;
-		finalSend=torqueChange();	 //	½µµÍ¸ß×ªËÙÊ±×ª¾ØÊä³ö
+		finalSend=torqueChange();	 //	é™ä½é«˜è½¬é€Ÿæ—¶è½¬çŸ©è¾“å‡º
 
 		
-		/**************ĞŞ¸ÄÁË´Ë´¦***********/
+		/**************ä¿®æ”¹äº†æ­¤å¤„***********/
 		if(	(finalSend-	finalSend_old )>50&&finalSend>500){
 			finalSend=finalSend_old+50;
 		}
@@ -479,26 +482,26 @@ void sendToMc(){ //CAN0		 µç»úĞı±ä½Ç3651
 
 		finalSend=finalSend>999?999:finalSend;
 		finalSend=finalSend<0?0:finalSend;
-		can1_send2[2] = (ubyte)(finalSend % 256);		  			// 0x64	 			µÍÎ»ÔÚÇ°  ¡·¡·¡·ÏŞËÙËùÔÚÎ»ÖÃ
-		can1_send2[3] = (ubyte)(finalSend >> 8);					// 0x00  Ê¾Àı10%	¸ßÎ»ÔÚºó  ¡·¡·¡·ÏŞËÙËùÔÚÎ»ÖÃ
+		can1_send2[2] = (ubyte)(finalSend % 256);		  			// 0x64	 			ä½ä½åœ¨å‰  ã€‹ã€‹ã€‹é™é€Ÿæ‰€åœ¨ä½ç½®
+		can1_send2[3] = (ubyte)(finalSend >> 8);					// 0x00  ç¤ºä¾‹10%	é«˜ä½åœ¨å  ã€‹ã€‹ã€‹é™é€Ÿæ‰€åœ¨ä½ç½®
 		if(driveReadyFlag ==1 & runFlag==1)
 		{
-			CAN_vLoadData(1,can1_send2);	//0ÎªÏûÏ¢ĞòºÅ£¬D_commandÎªÊı¾İµØÖ·£¬³¤¶È£¬½Úµã£¬IDÖ¡ÔÚDaveÖĞÉèÖÃ¡£
+			CAN_vLoadData(1,can1_send2);	//0ä¸ºæ¶ˆæ¯åºå·ï¼ŒD_commandä¸ºæ•°æ®åœ°å€ï¼Œé•¿åº¦ï¼ŒèŠ‚ç‚¹ï¼ŒIDå¸§åœ¨Daveä¸­è®¾ç½®ã€‚
 			CAN_vTransmit(1);
 		}
 		if(runFlag==0)
 		{
-			can1_send2[2] = 0;		  			// 0x64	 			µÍÎ»ÔÚÇ°  ¡·¡·¡·ÏŞËÙËùÔÚÎ»ÖÃ
-			can1_send2[3] = 0;					// 0x00  Ê¾Àı10%	¸ßÎ»ÔÚºó  ¡·¡·¡·ÏŞËÙËùÔÚÎ»ÖÃ
-			CAN_vLoadData(1,can1_send2);	//0ÎªÏûÏ¢ĞòºÅ£¬N_commandÎªÊı¾İµØÖ·£¬³¤¶È£¬½Úµã£¬IDÖ¡ÔÚDaveÖĞÉèÖÃ¡£
+			can1_send2[2] = 0;		  			// 0x64	 			ä½ä½åœ¨å‰  ã€‹ã€‹ã€‹é™é€Ÿæ‰€åœ¨ä½ç½®
+			can1_send2[3] = 0;					// 0x00  ç¤ºä¾‹10%	é«˜ä½åœ¨å  ã€‹ã€‹ã€‹é™é€Ÿæ‰€åœ¨ä½ç½®
+			CAN_vLoadData(1,can1_send2);	//0ä¸ºæ¶ˆæ¯åºå·ï¼ŒN_commandä¸ºæ•°æ®åœ°å€ï¼Œé•¿åº¦ï¼ŒèŠ‚ç‚¹ï¼ŒIDå¸§åœ¨Daveä¸­è®¾ç½®ã€‚
 			CAN_vTransmit(1);
 		}
-	} //¿ØÖÆÖÜÆÚ¿ØÖÆ½áÊø
+	} //æ§åˆ¶å‘¨æœŸæ§åˆ¶ç»“æŸ
 }
 
 /*******************************************************************************************/
-/*************************************ÓÍÃÅ¼ÓËÙ±ä»¯ÂÊÏŞ·ù*************************************/
-/*********ÊäÈë£ºÓÍÃÅÊı¾İ         ·µ»Ø£ºÏŞÖÆºóµÄÓÍÃÅÊı¾İ************************************/
+/*************************************æ²¹é—¨åŠ é€Ÿå˜åŒ–ç‡é™å¹…*************************************/
+/*********è¾“å…¥ï¼šæ²¹é—¨æ•°æ®         è¿”å›ï¼šé™åˆ¶åçš„æ²¹é—¨æ•°æ®************************************/
 /*******************************************************************************************/
 int ac_old=0;
 int acChangeLimit(int ac){
@@ -511,9 +514,9 @@ int acChangeLimit(int ac){
  }	
 
  /*******************************************************************************************/
-/*************************************½µµÍ¸ß×ªËÙÊ±×ª¾ØÊä³ö***********************************/
-/*********ÊäÈë£ºÓÍÃÅÏŞÖÆ±ä»¯ÂÊºóµÄ×ª¾Ø*******************************************************/
-/*********·µ»Ø£º¸ß×ªËÙÊ±£¬Öğ²½½µµÍ×ª¾Øºó*****************************************************/
+/*************************************é™ä½é«˜è½¬é€Ÿæ—¶è½¬çŸ©è¾“å‡º***********************************/
+/*********è¾“å…¥ï¼šæ²¹é—¨é™åˆ¶å˜åŒ–ç‡åçš„è½¬çŸ©*******************************************************/
+/*********è¿”å›ï¼šé«˜è½¬é€Ÿæ—¶ï¼Œé€æ­¥é™ä½è½¬çŸ©å*****************************************************/
 /*******************************************************************************************/
 
 int torqueChange(){

@@ -126,15 +126,15 @@ void MAIN_vLockProtecReg(void);
  #include "math.h"
  #include "GetDealData.h"
 
-#define DriveReadyLed		 P10_OUT_P4 //´ıÊ»Ö¸Ê¾µÆ
-#define BreakLed      		 P0_OUT_P5  //É²³µ
-#define Beep 			     P10_OUT_P3 //ÃùµÑ
-#define StartButton			 P7_IN_P2   //Æô¶¯°´Å¥¼ì²â £¬ÊäÈë¸ßÎª0
-#define SafetyLoopDetection  P7_IN_P1	//°²È«»ØÂ·¼ì²â£¬ÊäÈë¸ßÎª0
-#define McBTB  				 P6_IN_P1	//µç»ú¿ØÖÆÆ÷×¼±¸¾ÍĞ÷¼ì²â £¬ÊäÈë¸ßÎª0
+#define DriveReadyLed		 P10_OUT_P4 //å¾…é©¶æŒ‡ç¤ºç¯
+#define BreakLed      		 P0_OUT_P5  //åˆ¹è½¦
+#define Beep 			     P10_OUT_P3 //é¸£ç¬›
+#define StartButton			 P7_IN_P2   //å¯åŠ¨æŒ‰é’®æ£€æµ‹ ï¼Œè¾“å…¥é«˜ä¸º0
+#define SafetyLoopDetection  P7_IN_P1	//å®‰å…¨å›è·¯æ£€æµ‹ï¼Œè¾“å…¥é«˜ä¸º0
+#define McBTB  				 P6_IN_P1	//ç”µæœºæ§åˆ¶å™¨å‡†å¤‡å°±ç»ªæ£€æµ‹ ï¼Œè¾“å…¥é«˜ä¸º0
 
 
-extern ubyte can1_send2[8]; //VCUÏòµç»ú¿ØÖÆÆ÷·¢ËÍ×ª¾Ø»ò×ªËÙÖ¸Áî
+extern ubyte can1_send2[8]; //VCUå‘ç”µæœºæ§åˆ¶å™¨å‘é€è½¬çŸ©æˆ–è½¬é€ŸæŒ‡ä»¤
 	 
 
 extern int gear,gearWeight;

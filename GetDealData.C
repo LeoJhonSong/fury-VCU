@@ -59,7 +59,7 @@ void get_ac_AD()
 	 if(ac_normolize[0]-ac_normolize[1]>10||ac_normolize[1]-ac_normolize[0]>10){
 	 	acUnRealiableCout++;
 		if(acUnRealiableCout>20){//不可靠超过100ms，则切除动力
-			acRealiableFlag=0; 
+			acRealiableFlag=0;
 			acUnRealiableCout=0;
 		}
 	}
